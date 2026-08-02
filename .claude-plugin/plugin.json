@@ -1,0 +1,15 @@
+{
+  "name": "prc-law",
+  "version": "1.0.0",
+  "description": "PRC-Law — 中国大陆法律 Agent Skills。覆盖商事合同/公司并购/劳动用工/隐私数据/产品合规/知识产权/争议解决/监管合规/AI治理/法学教育，10领域94技能。检索即门禁、双源交叉核验、律师审阅闸。",
+  "author": {
+    "name": "PRC-Law Contributors"
+  },
+  "homepage": "https://github.com/anthropics/claude-code/tree/main/plugins/community/prc-law",
+  "license": "Apache-2.0",
+  "keywords": ["legal", "china", "prc", "law", "contracts", "litigation", "compliance", "privacy", "ip", "labor", "corporate", "ai-governance", "skills"],
+  "commands": "./commands",
+  "agents": "./agents",
+  "hooks": "./hooks/hooks.json",
+  "mcpServers": "./.mcp.json"
+}

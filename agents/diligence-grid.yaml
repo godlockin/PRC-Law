@@ -1,0 +1,7 @@
+# 尽调网格 Agent
+# 监控数据室新增文件，按计划推送尽调状态
+jurisdiction: PRC
+schedule: "0 */6 * * *"  # 每6小时
+trigger: event
+skill: corporate:due-diligence-grid
+notify: console

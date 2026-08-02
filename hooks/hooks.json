@@ -1,0 +1,21 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matchers": [
+          {"tool": "Bash", "pattern": "rm\\s+-rf|sudo|curl.*\\|\\s*bash"},
+          {"tool": "Write", "pattern": "\\.\\./\\.\\./"}
+        ],
+        "command": "echo '[PRC-Law] BLOCKED: restricted operation denied' && exit 1"
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matchers": [
+          {"tool": "Write", "pattern": "\\.\\.\\/\\.\\.\\/\\.\\./"}
+        ],
+        "command": "echo '[PRC-Law] WARNING: write outside skill directory detected'"
+      }
+    ]
+  }
+}

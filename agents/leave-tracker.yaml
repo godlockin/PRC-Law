@@ -1,0 +1,7 @@
+# 假期追踪 Agent
+# 监控员工休假状态，30/15/7 天到期预警、返岗确认和超期升级
+jurisdiction: PRC
+schedule: "0 9 * * *"  # 每天 9:00
+trigger: scheduled
+skill: labor:leave-tracker
+notify: console

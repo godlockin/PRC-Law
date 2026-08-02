@@ -1,0 +1,7 @@
+# 产品上线雷达 Agent
+# 监控上线追踪器中即将需要法务审查的产品
+jurisdiction: PRC
+schedule: "0 9 * * *"  # 每天 9:00
+trigger: scheduled
+skill: product:launch-review
+notify: console

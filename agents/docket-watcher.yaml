@@ -1,0 +1,7 @@
+# 案件进度监控 Agent
+# 监控法院案件进展和截止日期
+jurisdiction: PRC
+schedule: "0 8 * * *"  # 每天 8:00
+trigger: scheduled
+skill: litigation:portfolio-status
+notify: console

@@ -1,0 +1,208 @@
+{
+  "民法典": {
+    "name": "民法典",
+    "chapters": [
+      "合同编·通则",
+      "合同编·典型合同·买卖/租赁/承揽/委托/保证",
+      "物权编·担保物权",
+      "侵权责任编",
+      "人格权编"
+    ],
+    "expected_articles": 1260,
+    "articles": {},
+    "status": "stub",
+    "source": "待通过 MCP 检索工具拉取",
+    "pulled_at": "2026-08-01"
+  },
+  "民事诉讼法": {
+    "name": "民事诉讼法",
+    "chapters": [
+      "管辖",
+      "证据",
+      "一审普通程序",
+      "二审程序",
+      "保全与执行"
+    ],
+    "expected_articles": 306,
+    "articles": {},
+    "status": "stub",
+    "source": "待通过 MCP 检索工具拉取",
+    "pulled_at": "2026-08-01"
+  },
+  "公司法": {
+    "name": "公司法",
+    "chapters": [
+      "有限责任公司设立与出资",
+      "股东权利",
+      "董监高义务",
+      "公司担保"
+    ],
+    "expected_articles": 266,
+    "articles": {},
+    "status": "stub",
+    "source": "待通过 MCP 检索工具拉取",
+    "pulled_at": "2026-08-01"
+  },
+  "刑法": {
+    "name": "刑法",
+    "chapters": [
+      "总则·犯罪构成/刑罚/量刑/追诉时效",
+      "分则·侵犯财产罪/破坏社会主义市场经济秩序罪"
+    ],
+    "expected_articles": 452,
+    "articles": {},
+    "status": "stub",
+    "source": "待通过 MCP 检索工具拉取",
+    "pulled_at": "2026-08-01"
+  },
+  "劳动合同法": {
+    "name": "劳动合同法",
+    "chapters": [
+      "劳动合同订立",
+      "劳动合同解除与终止",
+      "经济补偿与赔偿",
+      "竞业限制",
+      "劳务派遣"
+    ],
+    "expected_articles": 98,
+    "articles": {},
+    "status": "stub",
+    "source": "待通过 MCP 检索工具拉取",
+    "pulled_at": "2026-08-01"
+  },
+  "个人信息保护法": {
+    "name": "个人信息保护法",
+    "chapters": [
+      "个人信息处理规则",
+      "个人权利",
+      "处理者义务",
+      "跨境规则"
+    ],
+    "expected_articles": 74,
+    "articles": {},
+    "status": "stub",
+    "source": "待通过 MCP 检索工具拉取",
+    "pulled_at": "2026-08-01"
+  },
+  "数据安全法": {
+    "name": "数据安全法",
+    "chapters": [
+      "数据分类分级",
+      "重要数据",
+      "数据出境"
+    ],
+    "expected_articles": 55,
+    "articles": {},
+    "status": "stub",
+    "source": "待通过 MCP 检索工具拉取",
+    "pulled_at": "2026-08-01"
+  },
+  "商标法": {
+    "name": "商标法",
+    "chapters": [
+      "商标注册条件",
+      "商标侵权判定",
+      "侵权救济"
+    ],
+    "expected_articles": 73,
+    "articles": {},
+    "status": "stub",
+    "source": "待通过 MCP 检索工具拉取",
+    "pulled_at": "2026-08-01"
+  },
+  "专利法": {
+    "name": "专利法",
+    "chapters": [
+      "授权条件",
+      "侵权判定",
+      "抗辩",
+      "救济"
+    ],
+    "expected_articles": 82,
+    "articles": {},
+    "status": "stub",
+    "source": "待通过 MCP 检索工具拉取",
+    "pulled_at": "2026-08-01"
+  },
+  "著作权法": {
+    "name": "著作权法",
+    "chapters": [
+      "作品类型",
+      "权利内容",
+      "合理使用",
+      "侵权责任"
+    ],
+    "expected_articles": 67,
+    "articles": {},
+    "status": "stub",
+    "source": "待通过 MCP 检索工具拉取",
+    "pulled_at": "2026-08-01"
+  },
+  "行政处罚法": {
+    "name": "行政处罚法",
+    "chapters": [
+      "种类与设定",
+      "处罚程序",
+      "听证",
+      "执行"
+    ],
+    "expected_articles": 86,
+    "articles": {},
+    "status": "stub",
+    "source": "待通过 MCP 检索工具拉取",
+    "pulled_at": "2026-08-01"
+  },
+  "行政诉讼法": {
+    "name": "行政诉讼法",
+    "chapters": [
+      "受案范围",
+      "管辖",
+      "举证责任",
+      "判决类型"
+    ],
+    "expected_articles": 103,
+    "articles": {},
+    "status": "stub",
+    "source": "待通过 MCP 检索工具拉取",
+    "pulled_at": "2026-08-01"
+  },
+  "反不正当竞争法": {
+    "name": "反不正当竞争法",
+    "chapters": [
+      "混淆行为",
+      "虚假宣传",
+      "商业秘密"
+    ],
+    "expected_articles": 33,
+    "articles": {},
+    "status": "stub",
+    "source": "待通过 MCP 检索工具拉取",
+    "pulled_at": "2026-08-01"
+  },
+  "广告法": {
+    "name": "广告法",
+    "chapters": [
+      "禁止性规定",
+      "广告审查",
+      "法律责任"
+    ],
+    "expected_articles": 75,
+    "articles": {},
+    "status": "stub",
+    "source": "待通过 MCP 检索工具拉取",
+    "pulled_at": "2026-08-01"
+  },
+  "消费者权益保护法": {
+    "name": "消费者权益保护法",
+    "chapters": [
+      "消费者权利",
+      "经营者义务",
+      "争议解决"
+    ],
+    "expected_articles": 63,
+    "articles": {},
+    "status": "stub",
+    "source": "待通过 MCP 检索工具拉取",
+    "pulled_at": "2026-08-01"
+  }
+}

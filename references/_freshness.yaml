@@ -1,0 +1,82 @@
+# 全局新鲜度声明
+# 所有 references 文件继承此默认值
+defaults:
+  freshness_window_days: 180
+  freshness_category: legal-statute
+  last_verified: 2026-08-01
+  verified_against: "model-knowledge"
+  note: "所有引用须在运行时通过 MCP 检索工具核验。本文件仅作检索索引。"
+
+laws:
+  civil-code:
+    last_verified: 2026-08-01
+    effective_date: 2021-01-01
+    amendments: []
+  criminal-law:
+    last_verified: 2026-08-01
+    effective_date: 1997-10-01
+    amendments: ["修正案(十二) 2024-03-01"]
+  company-law:
+    last_verified: 2026-08-01
+    effective_date: 2024-07-01
+    amendments: []
+  civil-procedure-law:
+    last_verified: 2026-08-01
+    effective_date: 2024-01-01
+    amendments: ["2023修正"]
+  personal-information-protection-law:
+    last_verified: 2026-08-01
+    effective_date: 2021-11-01
+    amendments: []
+  data-security-law:
+    last_verified: 2026-08-01
+    effective_date: 2021-09-01
+    amendments: []
+  cyber-security-law:
+    last_verified: 2026-08-01
+    effective_date: 2017-06-01
+    amendments: []
+  labor-contract-law:
+    last_verified: 2026-08-01
+    effective_date: 2008-01-01
+    amendments: ["2012修正"]
+  administrative-penalty-law:
+    last_verified: 2026-08-01
+    effective_date: 2021-07-15
+    amendments: ["2021修订"]
+  administrative-reconsideration-law:
+    last_verified: 2026-08-01
+    effective_date: 2024-01-01
+    amendments: ["2023修订"]
+  administrative-litigation-law:
+    last_verified: 2026-08-01
+    effective_date: 1990-10-01
+    amendments: ["2017修正"]
+  trademark-law:
+    last_verified: 2026-08-01
+    effective_date: 2019-11-01
+    amendments: ["2019修正"]
+  patent-law:
+    last_verified: 2026-08-01
+    effective_date: 2021-06-01
+    amendments: ["2020修正"]
+  copyright-law:
+    last_verified: 2026-08-01
+    effective_date: 2021-06-01
+    amendments: ["2020修正"]
+  anti-unfair-competition-law:
+    last_verified: 2026-08-01
+    effective_date: 2019-04-23
+    amendments: ["2019修正"]
+  generative-ai-interim-measures:
+    last_verified: 2026-08-01
+    effective_date: 2023-08-15
+    amendments: []
+  algorithm-recommendation-regulations:
+    last_verified: 2026-08-01
+    effective_date: 2022-03-01
+    amendments: []
+  deep-synthesis-regulations:
+    last_verified: 2026-08-01
+    effective_date: 2023-01-10
+    amendments: []

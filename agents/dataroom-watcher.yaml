@@ -1,0 +1,7 @@
+# 数据室监控 Agent
+# 监控数据室新增文件，按预设类别和重要性阈值提取尽调问题
+jurisdiction: PRC
+schedule: "0 */6 * * *"  # 每6小时
+trigger: event
+skill: corporate:diligence-issue-extraction
+notify: console

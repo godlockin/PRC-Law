@@ -1,0 +1,7 @@
+# IP 续展监控 Agent
+# 扫描 IP 资产组合，商标/专利到期前 90/30/15 天预警
+jurisdiction: PRC
+schedule: "0 9 * * *"  # 每天 9:00
+trigger: scheduled
+skill: ip:portfolio
+notify: console

@@ -1,0 +1,7 @@
+# 合同续签监控 Agent
+# 扫描合同台账，到期30/60/90天预警
+jurisdiction: PRC
+schedule: "0 9 * * 1"  # 每周一 9:00
+trigger: scheduled
+skill: commercial:renewal-tracker
+notify: console

@@ -1,0 +1,7 @@
+# 法规动态监控 Agent
+# 轮询法规信息源，撰写周一晨会监管简报
+jurisdiction: PRC
+schedule: "0 7 * * 1"  # 每周一 7:00
+trigger: scheduled
+skill: regulatory:reg-feed-watcher
+notify: console
