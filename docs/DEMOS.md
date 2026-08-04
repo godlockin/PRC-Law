@@ -27,10 +27,13 @@
 |---|------|------|:---------:|:------:|---------|
 | **ND1** | 时间锚点法律测试 | 律师 | ✅ | 4 | 指导案例 17 号 |
 | **ND2** | 167 号案复现 | 律师 | ✅ | 8 | 指导案例 167 号 |
-| **ND3** | 案例库检索与画像 | 法务 | ✅ | 4 | 指导案例 18 号 |
+| **ND3** | 案例库检索与法院画像 | 法务 | ✅ | 4 | 指导案例 18 号 |
 | **ND4** | 170 号案公序良俗 | 律师 | ✅ | 6 | 指导案例 170 号 |
 | **ND5** | 法条跟踪与预警 | 法务总监 | ✅ | 4 | 民法典 537 条 |
 | **ND6** | 合同审查 v2.0 ORCHESTRATOR | 法务 | ⚠️ 需合同 | 7+ | 通用模板 |
+
+> ✅ **5 个 demo 端到端可一键运行**，每个 demo 都基于真实最高法指导案例或真实法条。
+> 运行方式：`python3 scripts/demo_nd{1-5}.py`
 
 ---
 
@@ -114,10 +117,7 @@ python3 scripts/demo_nd2.py
 
 ### 场景
 
-一起买卖合同纠纷案件将在朝阳区人民法院审理。律师想知道：
-- 朝阳区法院买卖合同案件平均审理周期？
-- 原告平均胜诉率？
-- 平均赔偿区间？
+一起劳动合同纠纷案件（末位淘汰解除），类比最高法指导案例 18 号（中兴通讯 vs 王鹏），评估杭州地区法院画像。
 
 ### 启发的用法
 
@@ -129,8 +129,11 @@ python3 scripts/demo_nd2.py
 ### 运行
 
 ```bash
+python3 scripts/demo_nd3.py
+# 输出: docs/demos/ND3-report.md
+
+# 真实法院画像
 python3 scripts/judge_pattern.py --court "最高人民法院" --cause "合同纠纷"
-# 输出: docs/COURT-REPORT.md
 ```
 
 ---
@@ -158,8 +161,37 @@ python3 scripts/judge_pattern.py --court "最高人民法院" --cause "合同纠
 ### 运行
 
 ```bash
-# TODO: 实现 demo_nd4.py
-python3 scripts/demo_nd4.py  # 计划中
+python3 scripts/demo_nd3.py
+# 输出: docs/demos/ND3-report.md
+```
+
+---
+
+## ND4: 170 号案公序良俗论证
+
+### 为什么这个 demo 重要？
+
+**演示律鉴对"原则性条款"的解释能力**——危房出租是否损害公共利益？这是典型的"公序良俗"原则适用，AI 必须能识别原则条款并系统论证。
+
+### 场景
+
+指导案例 170 号（最高法）：
+- 事实：危房（鉴定建议拆除）出租用于经营酒店
+- 争议：合同是否因损害公共利益无效？
+- 最高法裁判：**无效**（按过错分担责任）
+
+### 启发的用法
+
+当用户说"评估这份合同是否违反公序良俗" → 律鉴自动：
+1. 调用 `cn-interpretation-audit` 6 阶解释
+2. 引用民法典第 153 条（违背公序良俗无效）
+3. 给出"违反行政规章一般不影响 + 涉及公共安全时例外"的论证
+
+### 运行
+
+```bash
+python3 scripts/demo_nd4.py
+# 输出: docs/demos/ND4-report.md
 ```
 
 ---
@@ -187,10 +219,11 @@ python3 scripts/demo_nd4.py  # 计划中
 ### 运行
 
 ```bash
-# 添加法条到监听
-python3 scripts/statute_monitor.py --add --fgmc "中华人民共和国民法典" --ftnum "第五百三十七条"
+python3 scripts/demo_nd5.py
+# 输出: docs/demos/ND5-report.md
 
-# 扫描所有监听
+# 真实监听清单管理
+python3 scripts/statute_monitor.py --add --fgmc "中华人民共和国民法典" --ftnum "第五百三十七条"
 python3 scripts/statute_monitor.py --scan
 ```
 
