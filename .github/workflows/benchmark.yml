@@ -1,0 +1,61 @@
+name: PRC-Law Benchmark CI
+
+on:
+  schedule:
+    # 每周一 02:00 UTC 运行（北京时间 10:00）
+    - cron: '0 2 * * 1'
+  workflow_dispatch:  # 支持手动触发
+  push:
+    paths:
+      - 'scripts/benchmark_*.py'
+      - '_foundation/legal-retrieval/**'
+      - 'scripts/yuandian_mcp_bridge.py'
+
+# 防止 commit 后循环触发 workflow
+concurrency:
+  group: benchmark-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        # 限制权限，禁止自动 push 回仓库
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run benchmark_summary
+        env:
+          YUANDIAN_API_KEY: ${{ secrets.YUANDIAN_API_KEY }}
+        run: |
+          cd "$GITHUB_WORKSPACE"
+          python3 scripts/benchmark_summary.py
+
+      - name: Run benchmark_runner (full)
+        env:
+          YUANDIAN_API_KEY: ${{ secrets.YUANDIAN_API_KEY }}
+        run: |
+          cd "$GITHUB_WORKSPACE"
+          python3 scripts/benchmark_runner.py --output BENCHMARK-AUTO.md
+
+      - name: Upload benchmark artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results
+          path: |
+            docs/BENCHMARK-SUMMARY.md
+            docs/BENCHMARK-AUTO.md
+          retention-days: 30
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "❌ Benchmark CI failed"
+          echo "Check: https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
