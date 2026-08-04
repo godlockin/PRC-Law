@@ -1,0 +1,22 @@
+{
+  "_comment": "律鉴 MCP 配置模板。复制为 .mcp.json 后填入你的真实 API Key。",
+  "_security": "⚠️ .mcp.json 含真实 API Key，已在 .gitignore 中，不会被 git 追踪",
+  "mcpServers": {
+    "yuandian": {
+      "_comment_yuandian": "从 https://open.chineselaw.com 注册账号→个人中心→创建 API Key",
+      "command": "python3",
+      "args": ["scripts/yuandian_mcp_bridge.py"],
+      "env": {
+        "YUANDIAN_API_KEY": "sk_replace_with_your_yuandian_key"
+      }
+    },
+    "pkulaw": {
+      "_comment_pkulaw": "可选。从 https://www.pkulaw.com 获取 SERVICE_ID 和 API Key",
+      "type": "http",
+      "url": "https://apim-gw.pkulaw.com/your_service_id/mcp",
+      "headers": {
+        "Authorization": "Bearer your_pkulaw_api_key"
+      }
+    }
+  }
+}

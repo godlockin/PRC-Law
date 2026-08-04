@@ -8,6 +8,7 @@ data/cases/cail2018/
 
 # 项目本地配置文件（不入库）
 .claude/
+.mcp.json      # 含 API Key，必须用环境变量
 
 # Kallax 收件箱
 .kallax/
@@ -25,3 +26,6 @@ __pycache__/
 # IDE
 .vscode/
 .idea/
+
+# 监控数据
+docs/demos/*-report.md
