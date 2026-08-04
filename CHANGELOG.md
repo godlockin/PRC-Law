@@ -3,13 +3,44 @@
 > 所有版本变更的官方记录。格式基于 [Keep a Changelog](https://keepachangelog.com/)。
 > 律鉴使用语义化版本号：[主版本].[次版本].[修订号]。
 
-## [未发布] · 计划中
+## [9.2] · 2026-08-04
 
-### 计划
-- v10.0: 多源交叉核验（北大法宝 MCP 集成）
-- v10.1: Word DOCX 输出模板
-- v10.2: 案件-模板-法条 知识图谱可视化
-- v10.3: 在线 demo（Hugging Face Spaces 或 GitHub Pages）
+### 新增 · Word DOCX 输出
+- **`scripts/md2docx.py`** — Markdown → Word DOCX 转换器
+  - 中文字体支持（宋体/黑体/仿宋/等宽）
+  - 标题分级（一/二/三级）
+  - 表格（带边框）
+  - 引用块（律师审阅闸高亮）
+  - 列表（多级）
+  - 代码块
+- **`scripts/verify_docx.py`** — DOCX 验证（基于 LibreOffice）
+  - 通过 LibreOffice 转 .txt 验证中文完整性
+  - 解决 python-docx 读取 cell.text 的字符切割 bug
+- **零 mock 数据原则**: 输出仅基于真实 demo 报告
+
+### 已知问题
+- python-docx 的 `cell.text` 读取在某些场景会切字符（已知 bug）
+- 实际 DOCX 内容正确（LibreOffice 转换验证）
+- 律鉴使用 LibreOffice 验证而非 python-docx 读取
+
+### 使用
+
+```bash
+# 转换 demo 报告为 Word
+python3 scripts/md2docx.py docs/demos/ND2-report.md output.docx
+
+# 验证
+python3 scripts/verify_docx.py output.docx
+```
+
+---
+
+## [9.0] · 2026-08-04
+
+### 新增 · 项目收尾文档
+- **`CHANGELOG.md`** — 完整版本变更记录（v1.0-v9.0）
+- **`CONTRIBUTING.md`** — 贡献指南（含技能开发规范、安全规范、借鉴合规要求）
+- **`ROADMAP.md`** — 项目路线图（含短期/中期/长期目标）
 
 ---
 
