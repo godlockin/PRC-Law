@@ -37,19 +37,25 @@ cd PRC-Law
 
 ### 步骤 2.2：配置 API Key
 
+> ⚠️ **安全规则**：律鉴**永不**在仓库中存储真实 API Key。`.mcp.json` 已在 `.gitignore` 中，git 不会追踪你的真实配置。
+
 ```bash
-# 方式 A：环境变量（推荐，安全）
+# 方式 A：环境变量（最安全，推荐）
 export YUANDIAN_API_KEY="sk_your_key_here"
 
-# 方式 B：复制模板并编辑
+# 方式 B：复制模板并编辑（适合项目内固定使用）
 cp .mcp.json.example .mcp.json
 # 然后编辑 .mcp.json 把 sk_replace_with_your_yuandian_key 替换为真实 key
 ```
 
-> ⚠️ **安全提示**：
-> - `.mcp.json` 已在 `.gitignore` 中，不会被 git 追踪
-> - 永远不要把含真实 key 的 `.mcp.json` 提交到 git
-> - 如果发现 key 泄露，立即到 [open.chineselaw.com](https://open.chineselaw.com) 个人中心**轮换 key**
+**获取元典 API Key**：
+1. 访问 [open.chineselaw.com](https://open.chineselaw.com)
+2. 注册账号 → 个人中心 → 创建 API Key
+3. 复制 `sk_xxxxxx...` 格式的 key
+
+> ⚠️ **历史安全事件**：
+> 律鉴 v1.0 commit (50c59d3) 曾在 `.mcp.json` 中硬编码测试 key 推送到公开仓库，**已在 v8.3 通过 git-filter-repo 完整删除**（commit hash 重写为 58b4ae4 起算）。
+> 此事件教训：永远用环境变量或 `.gitignore` 排除 `.mcp.json`，不在仓库存储任何凭证。
 
 ### 步骤 2.3：验证 MCP 连接
 
