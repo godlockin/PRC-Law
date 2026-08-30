@@ -37,6 +37,43 @@
 | 🤝 想贡献 | [CONTRIBUTING.md](CONTRIBUTING.md) |
 | 🗺️ 看规划 | [ROADMAP.md](ROADMAP.md) |
 
+## 🔄 自同步（v8.2.0+）
+
+**律鉴会自己更新自己。** Claude Code 启动 skills 时，后台静默联网比对 GitHub upstream；发现新版本自动 `git pull --ff-only`，**不影响当前会话**。
+
+| 组件 | 触发时机 | 行为 |
+|------|---------|------|
+| `hooks/hooks.json` SessionStart | 每次 Claude 启动 | `nohup ... & disown` 触发校验，**零阻塞** |
+| `scripts/upstream_check.py` | 同上 | HTTPS GET GitHub API，比对 `plugin.json` version，写 `~/.prc-law/upstream-state.json` |
+| `scripts/upstream_sync.sh` | 检测到 drift 后 | mkdir-lock 防并发 + 跟随当前分支 + **`--ff-only` 永不强覆盖** + **REPO/BRANCH 白名单**防 flag smuggling |
+| `.github/workflows/self-sync.yml` | 每周一 03:00 UTC | 远端周扫 + drift 时自动开 issue 提醒 |
+| `_foundation/cn-upstream-sync` | 用户主动询问 | 只读展示层，解读 state 文件给用户 |
+
+### 查看当前同步状态
+
+```bash
+cat ~/.prc-law/upstream-state.json
+```
+
+字段：`local_version` / `remote_version` / `drift` / `action` (`sync`/`wait`/`manual`/`synced`) / `reason`。
+
+### 关闭自同步
+
+```bash
+# 临时跳过(单次会话)
+export PRC_LAW_SKIP_SYNC=1
+
+# 完全禁用 — 把 hooks/hooks.json 的 SessionStart 段注释掉
+```
+
+### 设计原则
+
+- **后台 + 静默**: 主技能路径不受影响
+- **只 ff-only**: 永远不强覆盖本地改动，dirty tree 自动放弃
+- **跟随分支**: 当前在 `dev/feature` 分支也能同步到同名远端
+- **多层安全**: REPO/BRANCH 白名单 + `--end-of-options` + flock 等价锁
+- **失败容忍**: 任何步骤失败只写 state 不抛异常
+
 ---
 
 **⚖️ 许可协议**: 个人学习/研究/非商业教学免费。商用需联系作者授权。详见 [LICENSE](LICENSE)。

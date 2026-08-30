@@ -1,0 +1,130 @@
+name: PRC-Law Self-Sync
+
+on:
+  # 每周一 03:00 UTC（北京时间 11:00）扫一次 upstream
+  schedule:
+    - cron: '0 3 * * 1'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.claude-plugin/plugin.json'
+      - '_foundation/**'
+      - '_domains/**'
+      - '_compound/**'
+
+# 防止并发跑多份
+concurrency:
+  group: prc-law-self-sync
+  cancel-in-progress: true
+
+jobs:
+  bump-on-push:
+    # 仅 push 触发时跑：自动 bump patch 版本
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0, persist-credentials: false }
+
+      - name: Bump patch version
+        run: |
+          set -euo pipefail
+          VERSION=$(jq -r .version .claude-plugin/plugin.json)
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
+          NEW="$MAJOR.$MINOR.$((PATCH + 1))"
+          jq --arg v "$NEW" '.version = $v' .claude-plugin/plugin.json > plugin.json.tmp
+          mv plugin.json.tmp .claude-plugin/plugin.json
+          echo "Bumped: $VERSION -> $NEW"
+
+      - name: Commit bump
+        run: |
+          git config user.name "prc-law-bot"
+          git config user.email "prc-law-bot@users.noreply.github.com"
+          git add .claude-plugin/plugin.json
+          git diff --cached --quiet || git commit -m "chore: bump plugin.json to v$(jq -r .version .claude-plugin/plugin.json)"
+          # 注意：不 push，避免递归触发；bump 仅作为本地记录，下次 workflow 会覆盖
+
+  weekly-upstream-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+
+      - name: Read local version
+        id: local
+        run: |
+          V=$(jq -r .version .claude-plugin/plugin.json)
+          echo "version=$V" >> "$GITHUB_OUTPUT"
+
+      - name: Fetch upstream latest tag
+        id: remote
+        run: |
+          # 同仓本身，跳过自指比较；如果配置了 fork 才走 remote URL
+          UPSTREAM_REPO="${UPSTREAM_REPO:-$GITHUB_REPOSITORY}"
+          TAG=$(curl -fsSL -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${UPSTREAM_REPO}/releases/latest" \
+            | jq -r '.tag_name // .name // empty')
+          if [ -z "$TAG" ]; then
+            # fallback：取最新 commit SHA 短哈希
+            TAG=$(curl -fsSL "https://api.github.com/repos/${UPSTREAM_REPO}/commits?per_page=1" \
+              | jq -r '.[0].sha[:7]')
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+        env:
+          UPSTREAM_REPO: ${{ vars.UPSTREAM_REPO }}
+
+      - name: Detect drift
+        id: drift
+        env:
+          LOCAL: ${{ steps.local.outputs.version }}
+          REMOTE: ${{ steps.remote.outputs.tag }}
+        run: |
+          # shellcheck disable=SC2154
+          if [ "$LOCAL" = "$REMOTE" ]; then
+            echo "drift=false" >> "$GITHUB_OUTPUT"
+            echo "✅ Local ($LOCAL) matches upstream ($REMOTE)"
+          else
+            echo "drift=true" >> "$GITHUB_OUTPUT"
+            echo "🔔 Drift detected: local=$LOCAL remote=$REMOTE"
+          fi
+
+      - name: Open drift issue
+        if: steps.drift.outputs.drift == 'true'
+        env:
+          LOCAL: ${{ steps.local.outputs.version }}
+          REMOTE: ${{ steps.remote.outputs.tag }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const local = process.env.LOCAL;
+            const remote = process.env.REMOTE;
+            // 去重：同一标题的 OPEN 状态 issue 不重复开
+            const existing = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'self-sync-drift'
+            });
+            const dup = existing.data.find(i => i.title.includes(local) && i.title.includes(remote));
+            if (dup) {
+              core.info(`Issue already open: #${dup.number}`);
+              return;
+            }
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `🔔 Plugin drift: local \`${local}\` vs upstream \`${remote}\``,
+              body: [
+                '**Triggered by:** `self-sync.yml` (weekly cron)',
+                `**Local version:** \`${local}\``,
+                `**Upstream tag/commit:** \`${remote}\``,
+                '',
+                '## Action',
+                '- [ ] Review upstream CHANGELOG.md',
+                '- [ ] Run `git pull --ff-only origin main` locally',
+                '- [ ] Bump `.claude-plugin/plugin.json` version',
+                '- [ ] Close this issue'
+              ].join('\n'),
+              labels: ['self-sync-drift']
+            });

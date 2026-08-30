@@ -3,6 +3,57 @@
 > 所有版本变更的官方记录。格式基于 [Keep a Changelog](https://keepachangelog.com/)。
 > 律鉴使用语义化版本号：[主版本].[次版本].[修订号]。
 
+## [未发布]
+
+### 新增 · 自同步能力（Self-Sync）
+律鉴 v8.2.0+ 起具备**联网自更新**能力，无需用户手动 `git pull`。
+
+- **`scripts/upstream_check.py`** — 联网校验上游版本
+  - HTTPS GET `api.github.com/repos/godlockin/PRC-Law/releases/latest`，fallback 到最新 commit SHA
+  - 比对 `.claude-plugin/plugin.json` 的 `version` 字段
+  - 写 `~/.prc-law/upstream-state.json`（atomic rename）
+  - 1h 缓存，避免重复打 API
+- **`scripts/upstream_sync.sh`** — 后台 git 同步
+  - `mkdir` 原子锁防并发（macOS/Linux 通吃，规避 flock 缺失问题）
+  - 自动跟随当前分支（`dev/feature` 分支也能同步到同名远端）
+  - **`git pull --ff-only`** — 永不强覆盖本地改动
+  - dirty tree 检测 → 自动放弃并写 `state.action = "manual"`
+- **`hooks/hooks.json` SessionStart** — Claude 启动时 `nohup ... & disown` 触发校验，**零阻塞主技能**
+- **`.github/workflows/self-sync.yml`** — 远端周扫
+  - `cron: '0 3 * * 1'`（北京时间每周一 11:00）
+  - push 触发自动 bump patch 版本
+  - drift 时自动开 `self-sync-drift` issue（含去重）
+- **`_foundation/cn-upstream-sync/SKILL.md`** — 只读展示层
+  - 用户主动询问"检查更新/同步/upgrade plugin"时触发
+  - 同 session 内只提示一次（按 `checked_at` 去重）
+
+### 安全 · Argv Flag Smuggling 防护
+修复了 background security review 报告的高危问题：
+
+- `REPO` 白名单：`^[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$`
+- `BRANCH` 白名单：`^[A-Za-z0-9._/-]{1,100}$`
+- `git fetch --end-of-options` + `git pull --ff-only --end-of-options`：所有后续 arg 必须当 refspec 解析，无法注入 `-upload-pack` 等 flag
+
+攻击向量测试：
+```bash
+UPSTREAM_BRANCH='-upload-pack=evil' bash scripts/upstream_sync.sh
+# → exit 2, FATAL: invalid BRANCH='-upload-pack=evil'
+```
+
+### 设计原则
+- **后台 + 静默**：所有网络/IO 走 detach，主技能路径不受影响
+- **只 ff-only**：永远不强覆盖本地改动
+- **跟随分支**：自动同步当前所在分支
+- **多层安全**：白名单 + `--end-of-options` + mkdir-lock
+- **失败容忍**：任何步骤失败只写 state 不抛异常
+
+### 用户可见
+- 状态查看：`cat ~/.prc-law/upstream-state.json`
+- 字段：`local_version` / `remote_version` / `drift` / `action` (`sync`/`wait`/`manual`/`synced`) / `reason`
+- 关闭同步：`export PRC_LAW_SKIP_SYNC=1` 或注释 `hooks/hooks.json` 的 SessionStart 段
+
+---
+
 ## [9.2] · 2026-08-04
 
 ### 新增 · Word DOCX 输出

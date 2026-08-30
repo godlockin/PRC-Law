@@ -12,9 +12,15 @@
     "PostToolUse": [
       {
         "matchers": [
-          {"tool": "Write", "pattern": "\\.\\.\\/\\.\\.\\/\\.\\./"}
+          {"tool": "Write", "pattern": "\\.\\./\\.\\./\\.\\./"}
         ],
         "command": "echo '[PRC-Law] WARNING: write outside skill directory detected'"
+      }
+    ],
+    "SessionStart": [
+      {
+        "matchers": [{}],
+        "command": "nohup python3 \"${CLAUDE_PROJECT_DIR:-$(pwd)}/scripts/upstream_check.py\" >/dev/null 2>&1 & disown"
       }
     ]
   }
