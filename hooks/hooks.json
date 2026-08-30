@@ -20,7 +20,7 @@
     "SessionStart": [
       {
         "matchers": [{}],
-        "command": "nohup python3 \"${CLAUDE_PROJECT_DIR:-$(pwd)}/scripts/upstream_check.py\" >/dev/null 2>&1 & disown"
+        "command": "nohup python3 \"${CLAUDE_PROJECT_DIR:-$(pwd)}/scripts/upstream_check.py\" >/dev/null 2>&1 & disown ; nohup python3 \"${CLAUDE_PROJECT_DIR:-$(pwd)}/scripts/cache_health_check.py\" --quiet >/dev/null 2>&1 & disown"
       }
     ]
   }
