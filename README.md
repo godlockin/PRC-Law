@@ -24,8 +24,10 @@
 | 步骤 | 操作 |
 |------|------|
 | 1️⃣ | 打开 [QUICKSTART.md](QUICKSTART.md) — 安装 + API Key 配置 |
-| 2️⃣ | 跑一个 demo：`python3 scripts/demo_nd1.py` |
-| 3️⃣ | 试一个真实场景：在 Claude Code 中输入你的问题 |
+| 2️⃣ | **律师工作目录初始化**: `python3 scripts/prcclaw_init.py` (W16 智能引导, 自动检测 Claude Code / Trae / WorkBuddy) |
+| 3️⃣ | 跑一个 demo：`python3 scripts/demo_nd1.py` |
+| 4️⃣ | 跑律师工作流: `python3 scripts/lawyer_workflow.py --case-json your-case.json` |
+| 5️⃣ | 试一个真实场景：在 Claude Code 中输入你的问题 |
 
 ## 📚 文档导航
 
