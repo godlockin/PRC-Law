@@ -57,6 +57,57 @@ def _now_date() -> str:
     return datetime.now().strftime("%Y-%m-%d")
 
 
+# === W8.2: 元典/法宝 Credit 控制 ===
+# 配额耗尽时不阻塞律师工作流, 静默降级到 L2-L6
+# 配置: 环境变量 PRC_LAW_YUANDIAN_QUOTA (默认 5000/月)
+_CREDIT_FILE = Path.home() / ".cache" / "prc-law" / "yuandian_credit.json"
+
+
+def _yuandian_quota() -> int:
+    return int(os.environ.get("PRC_LAW_YUANDIAN_QUOTA", "5000"))
+
+
+def _yuandian_credit_read() -> int:
+    """读取本月已用次数"""
+    try:
+        if not _CREDIT_FILE.exists():
+            return 0
+        data = json.loads(_CREDIT_FILE.read_text(encoding="utf-8"))
+        # 月份切换时重置
+        cur_month = datetime.now().strftime("%Y-%m")
+        if data.get("month") != cur_month:
+            return 0
+        return int(data.get("count", 0))
+    except Exception:
+        return 0
+
+
+def _yuandian_credit_write(count: int) -> None:
+    """写入本月已用次数"""
+    try:
+        _CREDIT_FILE.parent.mkdir(parents=True, exist_ok=True)
+        _CREDIT_FILE.write_text(
+            json.dumps({
+                "month": datetime.now().strftime("%Y-%m"),
+                "count": count,
+            }, ensure_ascii=False),
+            encoding="utf-8",
+        )
+    except Exception:
+        # 写入失败不阻塞主流程
+        pass
+
+
+def _yuandian_credit_available() -> bool:
+    """检查是否还有配额 (W8.2 — 配额耗尽静默降级)"""
+    return _yuandian_credit_read() < _yuandian_quota()
+
+
+def _yuandian_credit_increment() -> None:
+    """调用一次 +1 (W8.2 — 防滥用)"""
+    _yuandian_credit_write(_yuandian_credit_read() + 1)
+
+
 def try_yuandian_pkulaw(law: str, article: Optional[str], keyword: Optional[str]) -> dict | None:
     """
     L1: 元典/法宝 MCP
@@ -64,8 +115,18 @@ def try_yuandian_pkulaw(law: str, article: Optional[str], keyword: Optional[str]
     - 调 yuandian_mcp_bridge.py (stdio) 或 HTTP(SSE)
     - 调用 pkulaw MCP
     这里留好签名, 实际接入需 .mcp.json 配置
+
+    Credit 控制 (W8.2):
+      - 维护本地 counter (~/.cache/prc-law/yuandian_credit.json)
+      - 配额耗尽 (call_count >= PRC_LAW_YUANDIAN_QUOTA) → 直接返回 None
+      - 失败/超时计入配额 (防止恶意重试)
+      - 配额耗尽时不抛异常, 静默降级
     """
-    # 检查 MCP 可用性
+    # 1. Credit 检查 — 配额耗尽直接降级 (W8.2)
+    if not _yuandian_credit_available():
+        return None
+
+    # 2. MCP 可用性检查
     mcp_json = ROOT / ".mcp.json"
     if not mcp_json.exists():
         return None
@@ -79,7 +140,8 @@ def try_yuandian_pkulaw(law: str, article: Optional[str], keyword: Optional[str]
     yuandian_key = os.environ.get("YUANDIAN_API_KEY", "")
     if not yuandian_key and not yuandian_cfg:
         return None
-    # 实际调 MCP — 这里需要 stdio 调用或 HTTP, 简化: 留 marker
+
+    # 3. 实际调 MCP — 这里需要 stdio 调用或 HTTP, 简化: 留 marker
     # 真接入参考 yuandian_mcp_bridge.py
     try:
         # 尝试调本地 bridge
@@ -91,12 +153,14 @@ def try_yuandian_pkulaw(law: str, article: Optional[str], keyword: Optional[str]
                 "params": {"law": law, "article": article, "keyword": keyword},
             }, ensure_ascii=False)
             r = subprocess.run(
-                ["python3", str(bridge)],
+                [sys.executable, str(bridge)],
                 input=payload,
                 capture_output=True,
                 text=True,
                 timeout=10,
             )
+            # 4. 计入配额 (W8.2) — 成功失败都计 (防滥用)
+            _yuandian_credit_increment()
             if r.returncode == 0 and r.stdout.strip():
                 try:
                     parsed = json.loads(r.stdout)
@@ -111,6 +175,8 @@ def try_yuandian_pkulaw(law: str, article: Optional[str], keyword: Optional[str]
                 except json.JSONDecodeError:
                     return None
     except Exception:
+        # 超时/异常也计入配额 (防止一直重试)
+        _yuandian_credit_increment()
         pass
     return None
 
@@ -270,7 +336,7 @@ def try_gov_cn(law: str, article: Optional[str], keyword: Optional[str]) -> dict
         import subprocess
         payload = json.dumps({"law": law, "article": article, "keyword": keyword})
         r = subprocess.run(
-            ["python3", str(gov_script), "--query", "--json"],
+            [sys.executable, str(gov_script), "--query", "--json"],
             input=payload,
             capture_output=True,
             text=True,
@@ -375,7 +441,30 @@ def main() -> int:
     parser.add_argument("--keyword", help="模糊匹配")
     parser.add_argument("--json", action="store_true")
     parser.add_argument("--explain", action="store_true")
+    parser.add_argument("--cross-verify", action="store_true",
+                        help="W7.3 多源并行交叉核验 (关键法条)")
+    parser.add_argument("--critical", action="store_true",
+                        help="标记为关键法条 (时效/刑期/举证责任)")
     args = parser.parse_args()
+
+    if args.cross_verify:
+        result = retrieve_cross_verify(
+            args.law, args.article, args.keyword, critical=args.critical)
+        if args.json:
+            print(json.dumps(result, ensure_ascii=False, indent=2))
+        else:
+            print(f"📊 多源交叉核验: {args.law} {args.article or ''}")
+            print(f"   找到: {'✅' if result['found'] else '❌'}")
+            print(f"   一致: {'✅' if result['consensus'] else '❌'}")
+            print(f"   源数: {result['source_count']}")
+            print(f"   标签: {result['label']}")
+            if result['matched_articles']:
+                print(f"   认定条号: {result['matched_articles']}")
+            if result['conflicts']:
+                print(f"\n⚠️ 冲突明细:")
+                for c in result['conflicts']:
+                    print(f"   - {c}")
+        return 0 if result['found'] else 2
 
     result = retrieve(args.law, args.article, args.keyword, explain=args.explain)
     if args.json:
@@ -398,6 +487,105 @@ def main() -> int:
                 for k, v in result["explain"].items():
                     print(f"   {k}: {v}")
     return 0 if result["found"] else 2
+
+
+def retrieve_cross_verify(
+    law: str,
+    article: Optional[str] = None,
+    keyword: Optional[str] = None,
+    require_min_sources: int = 2,
+    critical: bool = False,
+) -> dict:
+    """多源并行交叉核验 (W7.3)
+
+    对**关键法条** (时效/刑期/除斥期间/举证责任) 强制多源比对:
+      - 同时调 L1 (元典/法宝) + L4 (flk_npc) + L5 (gov.cn)
+      - 对比三者结果, 输出"多源一致/单源/冲突"标签
+      - critical=True 时, 任何源缺失即降级标签
+
+    Args:
+        law: 法律名称 (如 "民法典")
+        article: 条号 (如 "第188条" 或 "188")
+        keyword: 关键词 (可选)
+        require_min_sources: 最少需 N 个源成功 (默认 2)
+        critical: 关键法条 (True 时要求更高一致度)
+
+    Returns:
+        {
+            "found": True/False,
+            "consensus": True/False (所有源一致),
+            "source_count": 成功源数,
+            "label": "[已确认: 多源一致]" / "[单源—需复核]" / "[待检索—多源均不可用]",
+            "sources": {level: result},
+            "conflicts": [差异描述],
+            "matched_articles": [一致认定的条号],
+        }
+    """
+    # 多源并行查询 (不降级, 全查)
+    sources = {}
+    for level, try_fn in [
+        (1, try_yuandian_pkulaw),
+        (4, try_flk_npc),
+        (5, try_gov_cn),
+        # L2 (prc-law-data) 也可加入, 但需 datasets 库
+        # (2, try_prc_law_data),
+    ]:
+        try:
+            res = try_fn(law, article, keyword)
+            if res:
+                sources[level] = res
+        except Exception as e:
+            # 单个源失败不影响其他
+            pass
+
+    source_count = len(sources)
+
+    # 提取各源认定的条号 (article 字段)
+    matched_articles: list[str] = []
+    for lvl, res in sources.items():
+        a = res.get("article") or res.get("条号")
+        if a:
+            matched_articles.append(str(a))
+
+    # 一致性判定
+    if source_count == 0:
+        consensus = False
+        conflicts = []
+        label = "[待检索—所有源均不可用]"
+    else:
+        # 简化: 条号一致 → consensus; 条号不一致 → 冲突
+        unique_articles = set(matched_articles)
+        if len(unique_articles) <= 1:
+            consensus = True
+            conflicts = []
+            if source_count >= require_min_sources:
+                if critical and source_count < 3:
+                    label = "[单源—关键法条需 3 源核验, 当前仅 {n}]".format(n=source_count)
+                else:
+                    label = f"[已确认: 多源一致 ({source_count} 源)]"
+            else:
+                label = f"[单源—需复核 (仅 {source_count} 源)]"
+        else:
+            consensus = False
+            conflicts = [
+                f"源 L{level} 认定的条号: {res.get('article') or res.get('条号', '?')}"
+                for level, res in sources.items()
+            ]
+            label = f"[多源冲突—需律师人工裁决]"
+
+    return {
+        "found": source_count > 0,
+        "consensus": consensus,
+        "source_count": source_count,
+        "label": label,
+        "sources": {f"L{lvl}": res for lvl, res in sources.items()},
+        "conflicts": conflicts,
+        "matched_articles": matched_articles,
+        "law": law,
+        "article": article,
+        "keyword": keyword,
+        "critical": critical,
+    }
 
 
 if __name__ == "__main__":

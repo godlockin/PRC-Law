@@ -23,8 +23,9 @@ freshness_category: tool
 
 ## ⚠️ 律师审阅闸
 
-> 本技能**仅做归档与检索**,不替代律师专业判断。所有提取的要素(案号/法院/案由/法条)
-> 自动化完成,**关键案号必须人工核对原文本**。检索结果仅供参考,不可直接作为法律意见。
+> 本技能仅做归档与检索, 不构成法律意见。
+> 所有提取的要素 (案号/法院/案由/法条) 自动化完成, **必须人工逐一核对原文本**后方可引用。
+> 检索结果仅供参考, 对外使用前必须经**执业律师书面确认**。
 
 ## 能力边界
 
@@ -182,9 +183,25 @@ print(result.stdout)
 - 定期备份: `cp ~/.prc-law/case-archive.db ~/backups/`
 - 律所小组共享: 把 DB 放 SMB/NFS, 多律师只读 (避免并发写入冲突)
 
+## 数据源 (2026-Q3 更新)
+
+| 数据集 | 年份 | 来源 | License | 类型 | 用途 |
+|--------|------|------|---------|------|------|
+| **cail2018** | 2018 | HF china-ai-law-challenge | 未声明 | 刑事 267 万 | 历史回测, 刑期类案 |
+| **ChatLaw_Datasets** | 2024 | HF MunanNing | MIT | 混合 (民事/刑事/行政) | **民事案由首选** |
+| **Refined-Chinese-Legal-Dataset** | 2025 | HF zhjdong | CC-BY-NC-SA-4.0 | 刑事 170K | cail2018 清洗版 (学术用) |
+| **LeCaRDv2** | 2023 | HF mteb | MIT | 类案检索 | MTEB 基准, 类案相似度 |
+| **LaWGPT** | 2023 | GitHub pengxiao-song | GPL-3.0 | QA 50 万 | 法律问答 |
+| **DISC-LawLLM** | 2024 | GitHub FudanDISC | Apache-2.0 | QA 403K | 法律多任务 |
+
+**民事类案检索推荐路径**: ChatLaw (2024, MIT) → LeCaRDv2 (2023, MIT) → cail2018 (刑事兜底)
+
+> ⚠️ NC 限制警告: Refined-CLD (CC-BY-NC-SA-4.0) 仅限学术/非商用, 律所/法务商用避免
+> 2021 年后裁判文书网 bulk download 关闭, 无新增官方便道; HF 上 CAIL 系列后续(2022+)未公开完整数据
+
 ## 关联
 
-- 数据基础: 已有 cail2018 (HF streaming 267 万判例)
-- 检索入口: `scripts/case_client.py` (公开案例)
+- 数据基础: 已有 cail2018 + ChatLaw + LeCaRDv2 (scripts/case_client.py)
+- 检索入口: `scripts/case_client.py` (CaseClient.search / search_chatlaw / search_lecardv2)
 - 法条检索: `scripts/retrieval_router.py` (法条)
 - 标注规范: `_foundation/source-label/SKILL.md`
