@@ -26,7 +26,7 @@ freshness_category: tool
 - cn-legal-retrieval（步骤 1 强制执行：现行法检索门禁）
 - cn-norm-verify（关键法条双源核验：诉讼时效/管辖/代理权限）
 - cn-source-label（来源标注：`[已确认]` / `[单源—需复核]` / `[待检索]` / `[模型知识—需验证]`）
-- cn-matter-workspace（创建案件工作台 `/cn-matter-workspace new <slug> --type 诉讼`）
+- cn-matter-workspace（创建案件工作台, 内部 skill 调用语法: `/cn-matter-workspace new <slug> --type 诉讼`, 对律师透明）
 
 ## 操作步骤
 

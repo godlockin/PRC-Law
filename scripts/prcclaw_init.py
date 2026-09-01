@@ -68,47 +68,57 @@ __WORKSPACE_DIR__/
 
 ### Step 1: 接案评估
 在 __CLIENT__ 中输入:
-> /matter-intake 新案件: 张三诉李四借款 50 万
+> 我接到一个新案件: 张三诉李四借款 50 万, 我证据强对方弱
 
-系统自动调 cn-element-extraction + matter-intake, 写入:
-- `matters/M-2026-XXX/intake.json`
-- `matters/M-2026-XXX/timeline.json`
+系统自动:
+- 提取案件要素 (当事人/标的/证据)
+- 写入 `matters/M-2026-XXX/intake.json`
+- 生成时间线到 `timeline.json`
 
 ### Step 2: 调解策略
-> 调解策略给我看看
+> 这个案子调解策略给我看看
 
-系统调 cn-mediation-hint, 自动读:
-- 本地校准 (cases.db 统计)
-- 历史胜诉率基线
+系统自动:
+- 读你本地校准 (历史胜诉率)
+- 输出让幅区间 / 胜诉率 / 风险弱点
 
-输出 `matters/M-2026-XXX/strategy.md`
+策略单写到 `matters/M-2026-XXX/strategy.md`
 
 ### Step 3: 法条检索
 > 查民法典第 577 条
 
-系统调 retrieval_router 6 级降级 (元典→prc-law-data→cache→flk_npc→gov.cn→案例库)
+系统自动从 6 级降级源中找 (本地 → prc-law-data → 元典 → flk_npc → gov.cn → 案例库)。
 
 ### Step 4: 文书起草
 > 起草一份律师函
 
-系统调 cn-pleading-templates, 选模板 + LLM 抽字段 + 输出 Word:
-`matters/M-2026-XXX/lawyer-letter.docx`
+系统自动:
+- 选律师函模板
+- 从你前面说的事实抽取字段
+- 输出 Word 到 `matters/M-2026-XXX/lawyer-letter.docx`
 
 ### Step 5: 时效管理
-- `scripts/deadline_monitor.py` 自动从 timeline.json 算时效
-- cron 每天跑一次, 写入 `alerts/deadline-*.md`
+
+每天 9 点系统自动跑 (cron 调度):
+- 从所有 matters/*.json 算时效
+- 临近/已过期时效写入 `alerts/deadline-*.md`
+- 客户端会在你打开时主动推送提醒
+
+你也可以说: "看下本周时效" 立即触发。
 
 ## 已有案例库导入 (若有)
 
-若有律师本地案例库, 运行:
-```
-/prcclaw-import /path/to/old/cases
-```
+若你有历史案例库目录 (例如 D:\律师\案例\):
+
+在 __CLIENT__ 中说:
+> 导入我的旧案例库, 路径是 D:\律师\案例
 
 系统会:
-- **只读** 分析原目录结构
-- 建议导入策略 (不修改原文件)
-- 导入到本地 cases.db (本地索引)
+1. **只读** 分析你原目录结构 (文件类型 / 年度 / 案号分布)
+2. 建议导入策略 (不修改原文件)
+3. 落到本地 cases.db 索引 (本地检索用)
+
+你的原文件**永远不会被动**。
 
 ## 配置文件
 
@@ -117,14 +127,12 @@ __WORKSPACE_DIR__/
 ~/.config/prc-law/workspace.json
 ```
 
-可通过环境变量覆盖:
-- `PRC_LAW_WORKSPACE` 工作目录
-- `PRC_LAW_EXISTING_DIR` 已有案例目录 (只读)
+无需手动编辑 — 系统自动维护, 你也可在 __CLIENT__ 中说 "改工作目录" 调整。
 
 ## 客户端兼容性
 
 支持的 AI 客户端:
-- ✅ Claude Code (本项目原生)
+- ✅ Claude Code (Anthropic 原生)
 - ✅ Trae (字节跳动)
 - ✅ WorkBuddy (腾讯工作台)
 - ⚠️ 其他 (Cursor / Cline / Continue): 通过 Claude Code 协议兼容
@@ -132,10 +140,15 @@ __WORKSPACE_DIR__/
 ## 常见问题
 
 ### Q: 我的律师工作目录在哪里?
-A: 默认 `~/lawyer-work`. 可通过 `PRC_LAW_WORKSPACE` 环境变量修改.
+A: 默认 `~/lawyer-work` (Windows 下为 `C:/Users/你的名字/lawyer-work`).
+    系统引导时让你确认或调整, 之后可在客户端说 "改工作目录" 修改.
+
+### Q: 我不会敲命令, 怎么用?
+A: 不用敲. 你只要在 __CLIENT__ 窗口用自然语言说, 例如 "我接到一个新案件" / "调解策略给我看看".
+    所有命令系统自动跑, 你看不到代码.
 
 ### Q: 已有案例库会被修改吗?
-A: 不会. PRC-Law **只读**访问已有目录, 不修改原文件. 导入索引到本地 cases.db.
+A: 不会. PRC-Law **只读**访问你指定的已有目录, 不修改原文件. 仅导入索引到本地 cases.db.
 
 ### Q: 案件数据会不会上传?
 A: 不会. 所有案件数据本地存储, 不上传到任何云端.
@@ -300,9 +313,9 @@ def init_workflow(non_interactive: bool = False,
             print("  建议导入策略:")
             print(f"    {analysis.suggested_mapping['建议']}")
             print()
-            print("  导入命令 (后续):")
-            print(f"    python3 scripts/case_indexer.py index {ws.existing_dir} \\")
-            print(f"        --db {ws.cases_db}")
+            print("  律师操作: 在 __CLIENT__ 中说")
+            print(f'    "导入 {ws.existing_dir} 到本地案例库"')
+            print("    系统自动跑索引, 落到本地 cases.db")
         except Exception as e:
             print(f"  ⚠ 分析失败: {e}")
 
@@ -316,10 +329,10 @@ def init_workflow(non_interactive: bool = False,
     print(f" 客户端:   {client_label}")
     print(f" 已有目录 (只读): {ws.existing_dir or '(未指定)'}")
     print()
-    print(" 下一步:")
-    print(f"   1. 律师阅读 {welcome_path}")
-    print("   2. 接第一个案件: /matter-intake 新案件: ...")
-    print("   3. 已有案例库 (若有): 运行 case_indexer.py 导入")
+    print(" 下一步 (律师在 __CLIENT__ 中):")
+    print(f"   1. 阅读 {welcome_path}")
+    print('   2. 说: "我接到一个新案件"')
+    print(f'   3. 已有案例库 (若有): 说"导入 {ws.existing_dir}"')
     print()
     print(f" 配置: {CONFIG_PATH}")
     print()

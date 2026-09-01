@@ -21,21 +21,38 @@
 
 ## 🚀 5 分钟快速上手
 
-| 步骤 | 操作 |
+**原则**: 律师不写代码,不敲命令。所有交互 = 自然语言 + 文件 + 大模型。
+
+| 步骤 | 操作 (自然语言) |
 |------|------|
-| 1️⃣ | 打开 [QUICKSTART.md](QUICKSTART.md) — 安装 + API Key 配置 |
-| 2️⃣ | **律师工作目录初始化**: `python3 scripts/prcclaw_init.py` (W16 智能引导, 自动检测 Claude Code / Trae / WorkBuddy) |
-| 3️⃣ | 跑一个 demo：`python3 scripts/demo_nd1.py` |
-| 4️⃣ | 跑律师工作流: `python3 scripts/lawyer_workflow.py --case-json your-case.json` |
-| 5️⃣ | 试一个真实场景：在 Claude Code 中输入你的问题 |
+| 1️⃣ | 安装 [Claude Code / Trae / WorkBuddy](docs/workbuddy-integration.md) (AI 客户端) |
+| 2️⃣ | 加载 PRC-Law skills (WorkBuddy 自动加载, 或 Claude Code 加仓库为 skill 源) |
+| 3️⃣ | 首次启动, 客户端引导你 5 分钟初始化 (智能检测 Claude Code / Trae / WorkBuddy) |
+| 4️⃣ | 接新案件 — 在客户端说: "我接到一个合同纠纷, 张三诉李四 50 万, 我证据强对方弱" |
+| 5️⃣ | 客户端自动调 skills, 落案件台账 + 出调解策略 + 出 Word 文书 |
+
+**零命令行**。律师只说人话。
+
+### 给开发者/运维
+
+若你是开发者想跑 demo 或 CI 集成:
+
+| 步骤 | 操作 (开发者) |
+|------|------|
+| 1️⃣ | 打开 [QUICKSTART.md](QUICKSTART.md) |
+| 2️⃣ | 跑 demo: `python3 scripts/demo_nd1.py` |
+| 3️⃣ | 跑工作流: `python3 scripts/lawyer_workflow.py --case-json your-case.json` |
+| 4️⃣ | 跑 benchmark: `python3 scripts/benchmark_runner.py` |
 
 ## 📚 文档导航
 
 | 你是... | 看这个 |
 |--------|--------|
 | 🆕 新用户 | [QUICKSTART.md](QUICKSTART.md) ← 5 分钟上手 |
+| ⚖️ **律师/法务** | [docs/lawyer-guide.md](docs/lawyer-guide.md) ← **律师专用,零代码** |
 | ⚖️ 律师/法务 | [docs/DEMOS.md](docs/DEMOS.md) ← 6 个真实案例 |
 | 💻 开发者 | [CLAUDE.md](CLAUDE.md) ← 全局推理链 |
+| 🏗️ 架构师 | [docs/architecture.md](docs/architecture.md) ← 三层架构 |
 | 🤝 想贡献 | [CONTRIBUTING.md](CONTRIBUTING.md) |
 | 🗺️ 看规划 | [ROADMAP.md](ROADMAP.md) |
 
