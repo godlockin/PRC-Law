@@ -24,7 +24,8 @@ description: 告诉 cn-legal-retrieval 等检索类技能如何调用 retrieval_
 | **L3** | 本地 cache (`references/.cache/statutes.json`) | 文件读 | `[本地缓存 YYYY-MM-DD—需运行时核验]` | 零 credit | 离线 / 已知法条快速命中 |
 | **L4** | 爬虫结果 (`references/laws/<slug>.md`) | 文件读 | `[已确认: 国家法律法规数据库 YYYY-MM-DD]` | 零 credit | 全新法律 / 元典不可用 |
 | **L5** | 政府公开源 (v8.3.0+) | HTTP GET | `[已确认: 最高人民检察院/国务院 YYYY-MM-DD]` | 零 credit | 时效补丁 / 指导性案例 |
-| **L6** | 无可用源 | — | `[待检索—所有源均不可用]` | — | 阻塞输出 (参考 cn-legal-retrieval L3 规则) |
+| **L6** | **案例库** (v8.3.0+, case_client.py) | HF streaming | `[已确认: cail2018 案例库]` | 零 credit | 刑期预测 / 同案检索 / 量刑参考 |
+| **L7** | 无可用源 | — | `[待检索—所有源均不可用]` | — | 阻塞输出 |
 
 ## 各标签权威等级
 
@@ -67,6 +68,15 @@ description: 告诉 cn-legal-retrieval 等检索类技能如何调用 retrieval_
   - `https://www.spp.gov.cn/spp/jczdal/` — 最高检指导性案例 (实测 117 条最新批次可达)
   - `https://www.gov.cn/zhengce/` — 国务院政策文件 (实测 6 条最新可达)
 - **限制**: 仅列表/标题级匹配, 不直接返回法律全文
+
+### `[已确认: cail2018 案例库]` (L6) ⭐ 新增 (v8.3.0+)
+
+- **权威等级**: 中 (学术数据集, 非官方判决)
+- **适用场景**: 刑期预测 / 同案检索 / 量刑参考 / 法条引用频次统计
+- **数据**: 267 万刑事判决 (cail2018), HF streaming
+- **字段**: `fact` (案情) + `relevant_articles` (引用法条) + `accusation` (罪名) + `imprisonment` (刑期月) + `criminals` + `punish_of_money` + `death_penalty` + `life_imprisonment`
+- **调用**: `scripts/case_client.py --accusation 盗窃 --max-imp 12 --limit 5`
+- **限制**: 仅刑事案件; 首次 streaming 拉取 ~20s (后续快); 不在 git 仓库内
 
 ## 核心设计: prc-law-data 数据集 (v8.3.0+)
 

@@ -43,6 +43,23 @@ PRC-Law 与法律数据集**解耦**, 新增 prc-law-data 独立仓库作为可�
 - 国务院 gov.cn/zhengce/ 最新政策 (实测 6 条)
 - 健康检查 + 列表模式 + 查询模式
 
+### 新增 · 案例库客户端
+
+`scripts/case_client.py` — 中国大陆刑事判决案例库客户端:
+- 数据源: [china-ai-law-challenge/cail2018](https://huggingface.co/datasets/china-ai-law-challenge/cail2018) (HF, 267 万刑事判决)
+- 模式: **streaming** — 不预下载, 按需拉取
+- 字段: `fact` / `relevant_articles` / `accusation` / `imprisonment` / `criminals` / `punish_of_money` / `death_penalty` / `life_imprisonment`
+- 接口: `search(accusation, article, imprisonment_max, limit)` / `cases_by_article(264)` / `stats_by_accusation()`
+- 独立可选: 不依赖 prc-law-data, 不污染现有架构
+
+CLI 测试:
+```bash
+python3 scripts/case_client.py --accusation 盗窃 --max-imp 12 --limit 3
+# 命中: 盗窃 + 刑期 ≤ 12 月
+python3 scripts/case_client.py --article 264 --limit 1
+# 命中: 引用刑法 264 条的案例
+```
+
 ### 标签新增
 - `[已确认: prc-law-data 离线数据集 YYYY-MM-DD]` (L2)
 - `[已确认: 最高人民检察院/国务院 YYYY-MM-DD]` (L5)
