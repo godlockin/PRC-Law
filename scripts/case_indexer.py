@@ -10,10 +10,13 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import json
+import os
 import re
 import sqlite3
 import sys
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 try:
@@ -157,8 +160,103 @@ def _extract_section(text: str, start_kw: str, end_kws: list[str], max_chars: in
     return text[start:end].strip()[:max_chars]
 
 
-def extract_elements(text: str) -> dict:
-    """增强版: 除基础 5 字段外, 提取争议焦点/认定事实/法条引用/裁判结果等"""
+# === LLM 增强提取 ===
+# 当正则识别率低 (无案号/法院/法条) 时, 调用 LLM 智能提取
+# 默认关闭 (--llm-enhance 开启). 需环境变量配置 LLM API.
+LLM_ENHANCE_PROMPT = """从以下中国法院判决书中提取结构化信息, 输出 JSON (不要任何额外文字):
+{
+  "case_number": "案号, 如 (2020)京01民初1234号",
+  "court": "审理法院全名",
+  "procedure": "一审/二审/再审",
+  "judgment_date": "判决日期 (YYYY-MM-DD, 中文数字转换)",
+  "parties": "原告/被告/第三人 (用 | 分隔)",
+  "cause_of_action": "案由 (如 合同纠纷/劳动争议/侵权)",
+  "dispute_focus": "争议焦点 (一句话)",
+  "plaintiff_claims": "原告诉称摘要 (<=200字)",
+  "judgment_result": "判决结果摘要 (<=200字)",
+  "cited_statutes": "引用法条列表 (格式: 法名第N条, 用 | 分隔)"
+}
+
+判决书:
+---
+{text}
+---
+
+JSON:"""
+
+
+def _llm_extract(text: str) -> dict | None:
+    """调用 LLM 智能提取判决书要素. 返回 None 表示跳过.
+    通过环境变量配置:
+      PRC_LAW_LLM_API_KEY / PRC_LAW_LLM_BASE_URL / PRC_LAW_LLM_MODEL
+    默认走 Anthropic 兼容协议, 也支持 OpenAI 兼容.
+    """
+    api_key = os.environ.get("PRC_LAW_LLM_API_KEY", "").strip()
+    if not api_key:
+        return None
+    base_url = os.environ.get("PRC_LAW_LLM_BASE_URL",
+                              "https://api.anthropic.com")
+    model = os.environ.get("PRC_LAW_LLM_MODEL", "claude-haiku-4-5")
+    # 截断 (避免超 token)
+    snippet = text[:8000]
+    prompt = LLM_ENHANCE_PROMPT.format(text=snippet)
+
+    try:
+        import urllib.request
+        # Anthropic 协议
+        if "anthropic" in base_url:
+            payload = json.dumps({
+                "model": model,
+                "max_tokens": 1000,
+                "messages": [{"role": "user", "content": prompt}],
+            }).encode("utf-8")
+            req = urllib.request.Request(
+                f"{base_url.rstrip('/')}/v1/messages",
+                data=payload,
+                headers={
+                    "Content-Type": "application/json",
+                    "x-api-key": api_key,
+                    "anthropic-version": "2023-06-01",
+                },
+            )
+        else:
+            # OpenAI 兼容
+            payload = json.dumps({
+                "model": model,
+                "max_tokens": 1000,
+                "messages": [{"role": "user", "content": prompt}],
+            }).encode("utf-8")
+            req = urllib.request.Request(
+                f"{base_url.rstrip('/')}/v1/chat/completions",
+                data=payload,
+                headers={
+                    "Content-Type": "application/json",
+                    "Authorization": f"Bearer {api_key}",
+                },
+            )
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            result = json.loads(resp.read().decode("utf-8"))
+        # 提取 content
+        if "anthropic" in base_url:
+            content = result.get("content", [{}])[0].get("text", "")
+        else:
+            content = result["choices"][0]["message"]["content"]
+        # 解析 JSON (可能被 ```json ``` 包裹)
+        content = content.strip()
+        if content.startswith("```"):
+            content = re.sub(r"^```(?:json)?\s*", "", content)
+            content = re.sub(r"\s*```$", "", content)
+        return json.loads(content)
+    except Exception as e:
+        print(f"  [LLM提取失败] {e}", file=sys.stderr)
+        return None
+
+
+def extract_elements(text: str, llm_enhance: bool = False) -> dict:
+    """增强版: 除基础 5 字段外, 提取争议焦点/认定事实/法条引用/裁判结果等
+
+    llm_enhance=True 时, 若正则提取后关键字段仍空, 调 LLM 补全.
+    """
     case_num = ''
     m = CASE_NUMBER_RE.search(text)
     if m:
@@ -179,7 +277,6 @@ def extract_elements(text: str) -> dict:
     for m in LAW_REF_RE.finditer(text):
         law_name = m.group(1)
         article_num = m.group(2)
-        # 标准化为数字
         n = _cn_to_int(article_num)
         if n is not None:
             cited.add(f"{law_name}第{n}条")
@@ -197,7 +294,7 @@ def extract_elements(text: str) -> dict:
     judgment_result = _extract_section(
         text, '判决如下', ['如不服', '上诉于'], max_chars=500)
 
-    return {
+    elements = {
         'case_number': case_num,
         'court': court,
         'judgment_date': date_str,
@@ -214,6 +311,35 @@ def extract_elements(text: str) -> dict:
         'raw_text': text[:50000],
     }
 
+    # LLM 增强: 关键字段空时调用
+    if llm_enhance:
+        missing = []
+        if not elements['case_number']:
+            missing.append('case_number')
+        if not elements['court']:
+            missing.append('court')
+        if not elements['parties']:
+            missing.append('parties')
+        # 至少 2 个关键字段缺失才触发 (避免无谓开销)
+        if len(missing) >= 2:
+            llm_data = _llm_extract(text)
+            if llm_data:
+                for k in missing:
+                    v = llm_data.get(k)
+                    if v and not elements.get(k):
+                        elements[k] = str(v)
+                # 顺便补全其他可用字段
+                if not elements['dispute_focus'] and llm_data.get('dispute_focus'):
+                    elements['dispute_focus'] = str(llm_data['dispute_focus'])[:500]
+                if not elements['judgment_result'] and llm_data.get('judgment_result'):
+                    elements['judgment_result'] = str(llm_data['judgment_result'])[:500]
+                if not elements['plaintiff_claims'] and llm_data.get('plaintiff_claims'):
+                    elements['plaintiff_claims'] = str(llm_data['plaintiff_claims'])[:800]
+                if not elements['cited_statutes'] and llm_data.get('cited_statutes'):
+                    elements['cited_statutes'] = str(llm_data['cited_statutes'])[:500]
+
+    return elements
+
 
 def init_db(db_path: Path) -> sqlite3.Connection:
     db_path.parent.mkdir(parents=True, exist_ok=True)
@@ -227,14 +353,21 @@ def _file_hash(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def index_case(conn: sqlite3.Connection, path: Path, elements: dict) -> str:
-    """入库 + 跳过已存在 (按 file_hash 幂等) + FTS5 同步"""
+def index_case(conn: sqlite3.Connection, path: Path, elements: dict,
+               return_status: bool = False):
+    """入库 + 跳过已存在 (按 file_hash 幂等) + FTS5 同步
+
+    return_status=True 时返回 (case_id, status) where status is 'new'|'skipped'
+    return_status=False 时仅返回 case_id (向后兼容)
+    """
     fhash = _file_hash(path)
     existing = conn.execute(
         "SELECT id FROM cases WHERE file_hash=?", (fhash,)
     ).fetchone()
     if existing:
-        return existing[0]  # 已存在, 跳过
+        if return_status:
+            return existing[0], 'skipped'
+        return existing[0]
     case_id = fhash[:16]
     conn.execute("""
         INSERT INTO cases
@@ -262,14 +395,16 @@ def index_case(conn: sqlite3.Connection, path: Path, elements: dict) -> str:
           elements['dispute_focus'], elements['facts_found'],
           elements['applicable_laws'], elements['judgment_result']))
     conn.commit()
+    if return_status:
+        return case_id, 'new'
     return case_id
 
 
 def index_directory(input_dir: Path, db_path: Path = Path('cases.db'),
-                    max_depth: int = 3, min_size: int = 200):
+                    max_depth: int = 3, min_size: int = 200,
+                    llm_enhance: bool = False, workers: int = 1):
     conn = init_db(db_path)
     extensions = {'.docx', '.doc', '.pdf', '.txt'}
-    # 限深度防误用 (例: 用户输入 /tmp 会扫到几千杂文件)
     files = []
     for p in sorted(input_dir.rglob('*')):
         try:
@@ -284,7 +419,9 @@ def index_directory(input_dir: Path, db_path: Path = Path('cases.db'),
         if not p.is_file() or p.stat().st_size < min_size:
             continue
         files.append(p)
-    print(f'发现 {len(files)} 个法律文书 in {input_dir} (max_depth={max_depth}, min_size={min_size}B)')
+    print(f'发现 {len(files)} 个法律文书 in {input_dir} '
+          f'(max_depth={max_depth}, min_size={min_size}B, '
+          f'llm_enhance={llm_enhance}, workers={workers})')
 
     if len(files) > 10000:
         print(f'⚠️  发现 {len(files)} 个文件, 数量较大。可能是目录过宽?')
@@ -292,27 +429,50 @@ def index_directory(input_dir: Path, db_path: Path = Path('cases.db'),
         print(f'   Ctrl-C 取消... 5s 后继续')
         time.sleep(5)
 
-    indexed, skipped = 0, 0
+    def _process_one(fp: Path) -> tuple[Path, dict | None, str | None]:
+        """返回 (path, elements_dict, error_msg)"""
+        try:
+            text = extract_text(fp)
+            elements = extract_elements(text, llm_enhance=llm_enhance)
+            return (fp, elements, None)
+        except Exception as e:
+            return (fp, None, str(e))
+
+    indexed, skipped, llm_calls = 0, 0, 0
     errors_list: list[str] = []
     t0 = time.time()
-    for i, fp in enumerate(files, 1):
+
+    if workers <= 1:
+        results = [_process_one(fp) for fp in files]
+    else:
+        results = []
+        with ThreadPoolExecutor(max_workers=workers) as executor:
+            futures = {executor.submit(_process_one, fp): fp for fp in files}
+            for future in as_completed(futures):
+                results.append(future.result())
+
+    # 入库 (单线程写 DB, 避免锁竞争)
+    for i, (fp, elements, err) in enumerate(results, 1):
+        if err:
+            msg = f'  SKIP {fp.name}: {err}'
+            print(msg, file=sys.stderr)
+            errors_list.append(msg)
+            continue
         try:
-            fhash = _file_hash(fp)
-            existing = conn.execute(
-                "SELECT id FROM cases WHERE file_hash=?", (fhash,)
-            ).fetchone()
-            if existing:
+            case_id, status = index_case(conn, fp, elements, return_status=True)
+            if status == 'skipped':
                 skipped += 1
-                print(f'  [{i}/{len(files)}] SKIP (已入库) {fp.name}')
+                cn = elements['case_number'] or '(案号未识别)'
+                pct = (i / len(results)) * 100
+                print(f'  [{i}/{len(results)}] {pct:5.1f}% SKIP {cn} <- {fp.name}')
                 continue
-            text = extract_text(fp)
-            elements = extract_elements(text)
-            case_id = index_case(conn, fp, elements)
             indexed += 1
             cn = elements['case_number'] or '(案号未识别)'
-            pct = (i / len(files)) * 100
+            pct = (i / len(results)) * 100
             elapsed = time.time() - t0
-            print(f'  [{i}/{len(files)}] {pct:5.1f}% {case_id} {cn} <- {fp.name}')
+            eta = elapsed / i * (len(results) - i) if i > 0 else 0
+            print(f'  [{i}/{len(results)}] {pct:5.1f}% {case_id} {cn} <- {fp.name} '
+                  f'(已用 {elapsed:.0f}s, 剩 ~{eta:.0f}s)')
         except Exception as e:
             msg = f'  SKIP {fp.name}: {e}'
             print(msg, file=sys.stderr)
@@ -391,6 +551,10 @@ def main():
                      help='目录递归深度 (防误用, 默认 3)')
     idx.add_argument('--min-size', type=int, default=200,
                      help='文件最小字节数 (防空文件, 默认 200)')
+    idx.add_argument('--llm-enhance', action='store_true',
+                     help='识别率低时调用 LLM 增强提取 (需 PRC_LAW_LLM_API_KEY)')
+    idx.add_argument('--workers', type=int, default=1,
+                     help='并行线程数 (默认 1, 文件量大时可提到 4-8)')
 
     srch = sub.add_parser('search', help='检索案例')
     srch.add_argument('query', help='关键词 (支持 FTS5 语法)')
@@ -405,6 +569,8 @@ def main():
             Path(args.db),
             max_depth=args.max_depth,
             min_size=args.min_size,
+            llm_enhance=args.llm_enhance,
+            workers=args.workers,
         )
     elif args.cmd == 'search':
         results = search_cases(Path(args.db), args.query, args.limit)
