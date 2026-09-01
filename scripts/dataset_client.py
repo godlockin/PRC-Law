@@ -22,20 +22,24 @@ import os
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
+import os
 from pathlib import Path
 from typing import Optional
 
 ROOT = Path(__file__).resolve().parent.parent
 
-# 模式探测优先级
-CANDIDATE_DIRS = [
-    # Submodule 路径 (git submodule add vendor/prc-law-data)
-    ROOT / "vendor" / "prc-law-data" / "data",
-    # sibling 路径 (同级仓库布局)
-    ROOT.parent / "prc-law-data" / "data",
-    # 工作区路径
-    Path("/Users/chenchen/working/sourcecode/tools/law/cn_law_skill/prc-law-data/data"),
-]
+# 模式探测优先级 (W8.4 — 禁止硬编码绝对路径)
+CANDIDATE_DIRS: list[Path] = []
+# 1. 环境变量 (优先级最高, 律师可显式指定)
+_env_dir = os.environ.get("PRC_LAW_DATA_DIR", "").strip()
+if _env_dir:
+    CANDIDATE_DIRS.append(Path(_env_dir))
+# 2. Submodule 路径 (git submodule add vendor/prc-law-data)
+CANDIDATE_DIRS.append(ROOT / "vendor" / "prc-law-data" / "data")
+# 3. sibling 路径 (同级仓库布局)
+CANDIDATE_DIRS.append(ROOT.parent / "prc-law-data" / "data")
+# 4. 默认相对路径 (假设 scripts/dataset_client.py 在 PRC-Law/scripts/)
+#     不写绝对路径, 自动从 ROOT 推导
 
 CN_DIGITS = "零一二三四五六七八九"
 CN_UNITS = {"十": 10, "百": 100, "千": 1000}
