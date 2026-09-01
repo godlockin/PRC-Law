@@ -100,8 +100,16 @@ def extract_fields_from_text(
         return {}
 
     # SSRF 防护: 校验 base_url
+    import socket
     from urllib.parse import urlparse
     parsed = urlparse(base_url)
+
+    # 安全 1: 必须 HTTPS
+    if parsed.scheme != "https":
+        print(f"❌ LLM 端点必须 HTTPS: {parsed.scheme}", file=sys.stderr)
+        return {}
+
+    # 安全 2: 主机白名单 (小写)
     allowed_hosts = {
         "dashscope.aliyuncs.com", "open.bigmodel.cn",
         "api.deepseek.com", "api.moonshot.cn",
@@ -109,9 +117,51 @@ def extract_fields_from_text(
         "api.stepfun.com", "aip.baidubce.com",
         "api.anthropic.com", "api.openai.com",
     }
-    if parsed.hostname not in allowed_hosts:
-        print(f"❌ LLM 端点不在白名单: {parsed.hostname}", file=sys.stderr)
+    hostname = (parsed.hostname or "").lower()
+    if hostname not in allowed_hosts:
+        print(f"❌ LLM 端点不在白名单: {hostname}", file=sys.stderr)
         return {}
+
+    # 安全 3: 端口限制 (只允许 443)
+    if parsed.port and parsed.port not in (443, 80):
+        print(f"❌ LLM 端点端口受限: {parsed.port}", file=sys.stderr)
+        return {}
+
+    # 安全 4: DNS 解析 + 私有 IP 检查 (防 DNS rebinding SSRF)
+    try:
+        addr_info = socket.getaddrinfo(hostname, parsed.port or 443)
+        ips = {ai[4][0] for ai in addr_info}
+        for ip in ips:
+            try:
+                packed = socket.inet_aton(ip) if "." in ip else None
+                if packed:
+                    first = packed[0]
+                    # 127.0.0.0/8 loopback
+                    if first == 127:
+                        print(f"❌ LLM 端点解析到 loopback: {ip}", file=sys.stderr)
+                        return {}
+                    # 10.0.0.0/8 RFC1918
+                    if first == 10:
+                        print(f"❌ LLM 端点解析到 RFC1918: {ip}", file=sys.stderr)
+                        return {}
+                    # 172.16.0.0/12
+                    if first == 172 and packed[1] >= 16 and packed[1] <= 31:
+                        print(f"❌ LLM 端点解析到 RFC1918: {ip}", file=sys.stderr)
+                        return {}
+                    # 192.168.0.0/16
+                    if first == 192 and packed[1] == 168:
+                        print(f"❌ LLM 端点解析到 RFC1918: {ip}", file=sys.stderr)
+                        return {}
+                    # 169.254.0.0/16 link-local (云元数据!)
+                    if first == 169 and packed[1] == 254:
+                        print(f"❌ LLM 端点解析到 link-local (云元数据): {ip}",
+                              file=sys.stderr)
+                        return {}
+            except OSError:
+                continue
+    except socket.gaierror as e:
+        print(f"⚠ LLM 主机 DNS 解析失败: {e}", file=sys.stderr)
+        # 继续尝试 — 可能是临时网络问题
 
     # 构造 prompt
     prompt = f"""从以下案件文本中, 抽取每个占位符字段对应的值.
@@ -160,12 +210,26 @@ def extract_fields_from_text(
         print(f"⚠ LLM 调用失败: {e}", file=sys.stderr)
         return {}
 
-    # 解析 JSON (可能被 ```json 包裹)
-    json_match = _re.search(r"```(?:json)?\s*(\{.*?\})\s*```", content, _re.DOTALL)
-    if json_match:
-        json_str = json_match.group(1)
+    # 解析 JSON — 不再用贪婪正则 (防 ReDoS), 改用 strip-based
+    content_stripped = content.strip()
+    # 先去 code fence
+    if content_stripped.startswith("```"):
+        # 找到第一个 \n 跳过语言行
+        lines = content_stripped.split("\n", 1)
+        if len(lines) > 1:
+            content_stripped = lines[1]
+        # 去尾部 ```
+        if content_stripped.endswith("```"):
+            content_stripped = content_stripped[:-3]
+        content_stripped = content_stripped.strip()
+
+    # 找首个 { 到末个 } 的范围 (避免正则)
+    start = content_stripped.find("{")
+    end = content_stripped.rfind("}")
+    if start != -1 and end != -1 and end > start:
+        json_str = content_stripped[start:end + 1]
     else:
-        json_str = content.strip()
+        json_str = content_stripped
 
     try:
         return _json.loads(json_str)
@@ -299,6 +363,27 @@ def main():
         except json.JSONDecodeError as e:
             print(f"❌ JSON 解析失败: {e}", file=sys.stderr)
             sys.exit(1)
+        # Schema 验证: 必须是 {字段名: 字符串} 的扁平字典
+        if not isinstance(values, dict):
+            print(f"❌ 字段表必须为 JSON 对象 (dict), 当前类型: {type(values).__name__}",
+                  file=sys.stderr)
+            sys.exit(1)
+        # 过滤非字符串值, 避免任意对象注入 (fill_placeholders 仅接受字符串)
+        safe_values = {}
+        for k, v in values.items():
+            if not isinstance(k, str):
+                continue
+            if v is None:
+                continue
+            if not isinstance(v, str):
+                # 转字符串 (LLM 可能返回 int/bool)
+                v = str(v)
+            # 限制长度 (避免占位符被巨型字符串替换)
+            if len(v) > 10000:
+                print(f"⚠ 字段值过长 ({len(v)} chars), 跳过: {k}", file=sys.stderr)
+                continue
+            safe_values[k] = v
+        values = safe_values
         md_text = fill_placeholders(md_text, values)
         print(f"✓ 已填充 {len(values)} 个字段 (手动 JSON)")
     elif args.auto_fill:

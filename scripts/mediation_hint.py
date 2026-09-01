@@ -584,14 +584,62 @@ def main():
 
     calibration = None
     if args.calibration:
-        calibration_path = Path(args.calibration)
+        calibration_path = Path(args.calibration).expanduser().resolve()
+
+        # 安全检查 1: 必须存在
         if not calibration_path.exists():
             print(f"❌ 校准文件不存在: {calibration_path}", file=sys.stderr)
             sys.exit(1)
+
+        # 安全检查 2: 必须在校准数据预期目录内
+        # 律师工作目录的 calibration.json, 或律师明确指定的项目根目录
+        try:
+            from workspace import Workspace
+            ws = Workspace.load()
+            allowed_parents = [
+                ws.calibration_path.resolve(),  # ~/lawyer-work/.calibration.json
+                Path(ROOT).resolve(),  # PRC-Law 项目根目录 (测试场景)
+            ]
+        except Exception:
+            allowed_parents = [Path(ROOT).resolve()]
+
+        # 解析文件父目录, 必须落在任一允许位置下
+        is_allowed = any(
+            str(calibration_path.parent).startswith(str(p.parent))
+            for p in allowed_parents
+        )
+        if not is_allowed:
+            print(
+                f"❌ 校准文件路径不在允许范围内 (拒绝任意文件读取):\n"
+                f"   指定路径: {calibration_path}\n"
+                f"   允许位置: {[str(p) for p in allowed_parents]}",
+                file=sys.stderr,
+            )
+            sys.exit(2)
+
+        # 安全检查 3: 必须是 .json 后缀
+        if calibration_path.suffix.lower() != ".json":
+            print(f"❌ 校准文件必须为 .json: {calibration_path}", file=sys.stderr)
+            sys.exit(2)
+
+        # 安全检查 4: 文件大小限制 (避免读取巨大文件)
+        MAX_SIZE = 10 * 1024 * 1024  # 10 MB
+        file_size = calibration_path.stat().st_size
+        if file_size > MAX_SIZE:
+            print(f"❌ 校准文件过大 ({file_size} bytes > {MAX_SIZE}): {calibration_path}",
+                  file=sys.stderr)
+            sys.exit(2)
+
         try:
             calibration = json.loads(calibration_path.read_text(encoding="utf-8"))
+            # 安全检查 5: JSON 结构必须符合预期 (避免任意 JSON 攻击)
+            if not isinstance(calibration, dict) or "by_case_type" not in calibration:
+                print(f"❌ 校准 JSON 结构不符预期 (缺少 by_case_type 字段)",
+                      file=sys.stderr)
+                sys.exit(2)
             n = len(calibration.get("by_case_type", {}))
-            print(f"✓ 已加载本地校准: {n} 个案由 (来自 {calibration.get('cases.db', '?')})", file=sys.stderr)
+            print(f"✓ 已加载本地校准: {n} 个案由 (来自 {calibration.get('cases.db', '?')})",
+                  file=sys.stderr)
         except json.JSONDecodeError as e:
             print(f"❌ 校准 JSON 解析失败: {e}", file=sys.stderr)
             sys.exit(1)
