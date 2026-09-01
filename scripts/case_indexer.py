@@ -197,6 +197,49 @@ def _llm_extract(text: str) -> dict | None:
     base_url = os.environ.get("PRC_LAW_LLM_BASE_URL",
                               "https://api.anthropic.com")
     model = os.environ.get("PRC_LAW_LLM_MODEL", "claude-haiku-4-5")
+
+    # === SSRF 防护: 白名单 + 协议校验 ===
+    # 只允许公网 LLM 端点. 用户可加额外白名单 (逗号分隔 host).
+    DEFAULT_ALLOWED_HOSTS = {
+        "api.anthropic.com",
+        "api.openai.com",
+        "dashscope.aliyuncs.com",      # 阿里云 Qwen (通义千问)
+        "open.bigmodel.cn",            # 智谱 GLM
+        "api.deepseek.com",
+        "api.spark.xfyun.cn",          # 讯飞星火
+        "api.moonshot.cn",             # Moonshot Kimi
+        "api.baichuan-ai.com",         # 百川
+        "api.stepfun.com",             # 阶跃星辰
+        "aip.baidubce.com",            # 文心一言
+    }
+    extra = os.environ.get("PRC_LAW_LLM_EXTRA_HOSTS", "").strip()
+    if extra:
+        for h in extra.split(","):
+            h = h.strip().lower()
+            if h:
+                DEFAULT_ALLOWED_HOSTS.add(h)
+    try:
+        from urllib.parse import urlparse
+        parsed = urlparse(base_url)
+        # 仅 https
+        if parsed.scheme != "https":
+            print(f"  [LLM提取] 仅支持 https, 当前 {parsed.scheme}",
+                  file=sys.stderr)
+            return None
+        host = (parsed.hostname or "").lower()
+        if host not in DEFAULT_ALLOWED_HOSTS:
+            print(f"  [LLM提取] 端点 {host} 不在白名单, 跳过",
+                  file=sys.stderr)
+            return None
+        # 端口: 仅允许默认 (443)
+        if parsed.port and parsed.port not in (80, 443):
+            print(f"  [LLM提取] 非常规端口 {parsed.port}, 跳过",
+                  file=sys.stderr)
+            return None
+    except Exception as e:
+        print(f"  [LLM提取] URL 解析失败: {e}", file=sys.stderr)
+        return None
+
     # 截断 (避免超 token)
     snippet = text[:8000]
     prompt = LLM_ENHANCE_PROMPT.format(text=snippet)
@@ -234,7 +277,11 @@ def _llm_extract(text: str) -> dict | None:
                     "Authorization": f"Bearer {api_key}",
                 },
             )
-        with urllib.request.urlopen(req, timeout=30) as resp:
+        # 禁止 redirect (防 redirect 到非白名单)
+        no_redirect_opener = urllib.request.build_opener(
+            urllib.request.HTTPRedirectHandler
+        )
+        with no_redirect_opener.open(req, timeout=30) as resp:
             result = json.loads(resp.read().decode("utf-8"))
         # 提取 content
         if "anthropic" in base_url:
