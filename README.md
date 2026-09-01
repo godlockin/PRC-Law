@@ -37,6 +37,35 @@
 | 🤝 想贡献 | [CONTRIBUTING.md](CONTRIBUTING.md) |
 | 🗺️ 看规划 | [ROADMAP.md](ROADMAP.md) |
 
+## 📦 数据集 (v8.3.0+ · 独立仓库)
+
+**律鉴 v8.3.0+ 起,法律数据集与 skill 解耦。** 数据集在独立仓库 [prc-law-data](../prc-law-data/) (同级目录):
+
+| 指标 | 数值 |
+|------|-----:|
+| 法律总数 | **18,525 部** |
+| 司法解释 | 459 部 |
+| 行政法规 | 622 部 |
+| 民法典条数 | 1,258 条 |
+| 数据三法 + 配套 | 100% |
+| 核心法律命中 | **52/54 (96%)** |
+| 成本 | **¥0 (零 credit)** |
+
+**三种对接模式** (按优先级自动探测):
+1. **vendor submodule** (推荐): `git submodule add ... vendor/prc-law-data`
+2. **环境变量**: `export PRC_LAW_DATA_DIR=/path/to/prc-law-data/data`
+3. **HTTP API**: `export PRC_LAW_DATA_URL=http://localhost:8765`
+
+**6 级 fallback** (`scripts/retrieval_router.py`):
+1. L1 元典/法宝 MCP (商业, 消耗 credit)
+2. **L2 prc-law-data 数据集** (零 credit, 默认首选) ⭐
+3. L3 本地 cache
+4. L4 国法库爬虫
+5. **L5 政府公开源** (spp.gov.cn + gov.cn) ⭐
+6. L6 [待检索]
+
+详细见 `_foundation/cn-fallback-source/SKILL.md` + `prc-law-data/README.md`。
+
 ## 🔄 自同步（v8.2.0+）
 
 **律鉴会自己更新自己。** Claude Code 启动 skills 时，后台静默联网比对 GitHub upstream；发现新版本自动 `git pull --ff-only`，**不影响当前会话**。

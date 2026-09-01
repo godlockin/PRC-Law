@@ -5,7 +5,66 @@
 
 ## [未发布]
 
-### 新增 · 自同步能力（Self-Sync）
+### 新增 · 独立数据集仓库 prc-law-data (v8.3.0)
+
+PRC-Law 与法律数据集**解耦**, 新增 prc-law-data 独立仓库作为可选 submodule:
+
+**仓库结构** (`/Users/chenchen/working/sourcecode/tools/law/cn_law_skill/prc-law-data/`):
+- `data/statutes/<slug>.json` — **18525 部**法律全文 (民法典 1258 条, 公司法 213 条, 数据安全法 53 条, ...)
+- `data/index/laws.jsonl` — 元数据索引
+- `data/index/slug-map.json` — 中文名 → slug 映射 (18541 条)
+- `data/index/articles.jsonl` — 法条反向索引 (中+阿拉伯双键)
+- `scripts/import.py` — 从 3 个上游源合并导入
+- `scripts/update.sh` — 增量更新 (上游版本检测)
+- `scripts/serve.py` — HTTP 检索 API
+- `scripts/verify.py` — 完整性校验 (sha256)
+
+**数据来源** (公开 + 零 credit):
+- [13098806890/laws-data](https://github.com/13098806890/laws-data) — 1945 文件 + 中英双语 + RAG 增强 (MIT)
+- [LawRefBook/Laws](https://github.com/LawRefBook/Laws) — 1688 部法律 + 459 部司法解释 (1.8k⭐)
+- [twang2218/chinese-law-and-regulations](https://huggingface.co/datasets/twang2218/chinese-law-and-regulations) — 22552 条 (Apache-2.0)
+
+**接入 PRC-Law**:
+- `vendor/prc-law-data` symlink (submodule 替身, 立即可用)
+- `.gitmodules` 配置 (正式发布时切换为真正 submodule)
+- `scripts/dataset_client.py` — 自动探测三种对接模式 (vendor / env var / HTTP)
+- `scripts/retrieval_router.py` — 升级到 **6 级 fallback**:
+  1. L1 元典/法宝 MCP (消耗 credit)
+  2. **L2 prc-law-data 数据集 (零 credit, 默认首选)** ⭐
+  3. L3 本地 cache
+  4. L4 flk_npc 爬虫
+  5. **L5 政府公开源 (spp.gov.cn + gov.cn)** ⭐
+  6. L6 [待检索]
+
+### 新增 · 政府公开源 fetcher
+
+`scripts/fetch_gov_cn.py` — 实测可拉:
+- 最高人民检察院 spp.gov.cn 指导性案例 (117 条最新批次可达)
+- 国务院 gov.cn/zhengce/ 最新政策 (实测 6 条)
+- 健康检查 + 列表模式 + 查询模式
+
+### 标签新增
+- `[已确认: prc-law-data 离线数据集 YYYY-MM-DD]` (L2)
+- `[已确认: 最高人民检察院/国务院 YYYY-MM-DD]` (L5)
+
+### 文档
+- `_foundation/cn-fallback-source/SKILL.md` — 6 级 fallback 协议 + 三种对接模式说明
+- `prc-law-data/README.md` — 独立仓库使用指南
+- `prc-law-data/docs/schema.md` — 数据 schema 定义
+
+### 量化覆盖
+- 高频核心法律 **52/54 (96%)** 命中率
+- 数据三法 + 配套 100% 覆盖
+- 司法解释深度 (民法典配套解释 4 部全到位)
+
+### 设计原则
+- **解耦**: 数据集独立仓库, PRC-Law 仅保留调用脚本
+- **可选**: 不强制依赖 prc-law-data, 不配置时自动 skip L2 走 L3+
+- **按需加载**: 单部法律 ~200KB, 按 slug 拉取, 不预下载全部
+- **零 credit**: 3 个公开源合并, 优先于商业 API
+- **时效补丁**: 政府源 L5 补充离线数据集的快照滞后
+
+### 自同步能力（Self-Sync）
 律鉴 v8.2.0+ 起具备**联网自更新**能力，无需用户手动 `git pull`。
 
 - **`scripts/upstream_check.py`** — 联网校验上游版本

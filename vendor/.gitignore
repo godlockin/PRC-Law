@@ -1,0 +1,11 @@
+# vendor/ — 第三方依赖 (git submodule 占位)
+# 实际内容通过 git submodule 拉取:
+#   git submodule add https://github.com/your-org/prc-law-data.git vendor/prc-law-data
+#   git submodule update --init --recursive
+#
+# 本地开发可用 symlink 替代:
+#   ln -sfn ../prc-law-data vendor/prc-law-data
+*
+!.gitignore
+!.gitkeep
+!README.md

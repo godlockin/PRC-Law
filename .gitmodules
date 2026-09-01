@@ -1,0 +1,19 @@
+[submodule "vendor/prc-law-data"]
+	path = vendor/prc-law-data
+	url = https://github.com/your-org/prc-law-data.git
+	# 首次使用:
+	#   git submodule add https://github.com/your-org/prc-law-data.git vendor/prc-law-data
+	#   git submodule update --init --recursive
+	#
+	# 更新数据集:
+	#   git submodule update --remote vendor/prc-law-data
+	#
+	# 不需要 prc-law-data 时:
+	#   git submodule deinit vendor/prc-law-data
+	#   git rm vendor/prc-law-data
+	#
+	# 替代方案 (无网络):
+	#   1. 直接 git clone https://github.com/your-org/prc-law-data.git vendor/prc-law-data
+	#   2. 或设置环境变量:
+	#        export PRC_LAW_DATA_DIR=/path/to/prc-law-data/data
+	#        export PRC_LAW_DATA_URL=http://localhost:8765   # 远程 API 模式

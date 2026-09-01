@@ -2,12 +2,14 @@
 """
 retrieval_router.py — 统一检索路由器
 
-封装 4 级 fallback 链, 输出标准化 source-label 标注:
+封装 6 级 fallback 链, 输出标准化 source-label 标注:
 
-    1. 元典/法宝 MCP  (优先级最高, 商业权威)
-    2. 本地 cache     (statutes.json, 离线可用)
-    3. 爬虫结果        (references/laws/*.md, 官方权威)
-    4. source-label   (返回 None, 让上层标 [待检索])
+    1. 元典/法宝 MCP          (商业权威, 消耗 credit)
+    2. prc-law-data 数据集    (本地/HTTP 离线, 零 credit)  [v8.3.0+]
+    3. 本地 cache             (statutes.json, 离线可用)
+    4. 爬虫结果                (references/laws/*.md)
+    5. 政府公开源              (spp.gov.cn / gov.cn/zhengce/) [v8.3.0+]
+    6. source-label           (返回 None, 让上层标 [待检索])
 
 用法:
     python3 scripts/retrieval_router.py --law 民法典 --article 577
@@ -18,9 +20,9 @@ retrieval_router.py — 统一检索路由器
 返回结构:
     {
       "found": True,
-      "source_chain": ["yuandian", "cache", "flk_npc"],
-      "selected_level": 1,        # 1=最佳
-      "label": "[已确认: 元典法令+北大法宝 YYYY-MM-DD]",
+      "source_chain": ["yuandian", "prc_law_data", ...],
+      "selected_level": 2,
+      "label": "[已确认: prc-law-data 离线数据集 YYYY-MM-DD]",
       "content": "...",
       "metadata": {...}
     }
@@ -42,10 +44,12 @@ LAW_DIR = ROOT / "references" / "laws"
 
 # --- 标签映射 (与 cn-source-label 体系对齐) ---
 LABEL_BY_LEVEL = {
-    1: "[已确认: 元典+北大法宝 {date}]",   # MCP 多源
-    2: "[本地缓存 {date}—需运行时核验]",     # 本地 cache
-    3: "[已确认: 国家法律法规数据库 {date}]", # flk.npc.gov.cn
-    4: "[待检索—所有源均不可用]",
+    1: "[已确认: 元典+北大法宝 {date}]",         # MCP 多源 (商业)
+    2: "[已确认: prc-law-data 离线数据集 {date}]", # 本地/HTTP 数据集 (零 credit)
+    3: "[本地缓存 {date}—需运行时核验]",           # 本地 cache
+    4: "[已确认: 国家法律法规数据库 {date}]",     # flk.npc.gov.cn 爬虫
+    5: "[已确认: 最高人民检察院/国务院 {date}]",   # 政府公开源
+    6: "[待检索—所有源均不可用]",
 }
 
 
@@ -109,6 +113,34 @@ def try_yuandian_pkulaw(law: str, article: Optional[str], keyword: Optional[str]
     except Exception:
         pass
     return None
+
+
+def try_prc_law_data(law: str, article: Optional[str], keyword: Optional[str]) -> dict | None:
+    """L2: prc-law-data 数据集 (vendor submodule / 环境变量路径 / HTTP API)
+
+    优先于本地 cache (因为数据更全 + 法条结构化 + 零 credit).
+    """
+    try:
+        # 延迟 import, 避免 dataset_client 不可用时整个模块挂掉
+        from dataset_client import DatasetClient
+    except ImportError:
+        return None
+    client = DatasetClient()
+    if not client.is_available():
+        return None
+    hit = client.lookup(law, article, keyword)
+    if not hit:
+        return None
+    return {
+        "content": hit.content,
+        "law": hit.law,
+        "article": hit.article,
+        "source": "prc_law_data",
+        "source_detail": hit.source_detail,
+        "fetched_at": hit.fetched_at,
+        "article_count": hit.article_count,
+        "client_mode": client.mode,
+    }
 
 
 def try_local_cache(law: str, article: Optional[str], keyword: Optional[str]) -> dict | None:
@@ -226,12 +258,43 @@ def try_flk_npc(law: str, article: Optional[str], keyword: Optional[str]) -> dic
     return None
 
 
+def try_gov_cn(law: str, article: Optional[str], keyword: Optional[str]) -> dict | None:
+    """L5: 政府公开源 (spp.gov.cn + gov.cn/zhengce/) — 实时补丁
+    仅作为 L4 都失败后的兜底. 调用 fetch_gov_cn.py (v8.3.0+)
+    """
+    # 暂存 marker, 真正实现见 fetch_gov_cn.py
+    gov_script = ROOT / "scripts" / "fetch_gov_cn.py"
+    if not gov_script.exists():
+        return None
+    try:
+        import subprocess
+        payload = json.dumps({"law": law, "article": article, "keyword": keyword})
+        r = subprocess.run(
+            ["python3", str(gov_script), "--query", "--json"],
+            input=payload,
+            capture_output=True,
+            text=True,
+            timeout=15,
+        )
+        if r.returncode == 0 and r.stdout.strip():
+            try:
+                parsed = json.loads(r.stdout)
+                if parsed.get("found"):
+                    parsed["source"] = "gov_cn"
+                    return parsed
+            except json.JSONDecodeError:
+                pass
+    except Exception:
+        pass
+    return None
+
+
 def retrieve(law: str, article: Optional[str] = None, keyword: Optional[str] = None,
              explain: bool = False) -> dict:
-    """统一检索接口, 按 L1→L4 依次尝试"""
+    """统一检索接口, 按 L1→L6 依次尝试"""
     chain = []
     selected = None
-    selected_level = 4
+    selected_level = 6
     # L1
     res = try_yuandian_pkulaw(law, article, keyword)
     if res:
@@ -239,21 +302,35 @@ def retrieve(law: str, article: Optional[str] = None, keyword: Optional[str] = N
         selected = res
         selected_level = 1
     else:
-        # L2
-        res = try_local_cache(law, article, keyword)
+        # L2: prc-law-data 数据集
+        res = try_prc_law_data(law, article, keyword)
         if res:
-            chain.append("cache")
+            chain.append("prc_law_data")
             selected = res
             selected_level = 2
         else:
-            # L3
-            res = try_flk_npc(law, article, keyword)
+            # L3: 本地 cache
+            res = try_local_cache(law, article, keyword)
             if res:
-                chain.append("flk_npc")
+                chain.append("cache")
                 selected = res
                 selected_level = 3
             else:
-                chain.append("none")
+                # L4: 爬虫结果 (flk_npc)
+                res = try_flk_npc(law, article, keyword)
+                if res:
+                    chain.append("flk_npc")
+                    selected = res
+                    selected_level = 4
+                else:
+                    # L5: 政府公开源
+                    res = try_gov_cn(law, article, keyword)
+                    if res:
+                        chain.append("gov_cn")
+                        selected = res
+                        selected_level = 5
+                    else:
+                        chain.append("none")
 
     label = LABEL_BY_LEVEL[selected_level].format(date=_now_date())
     if selected:
@@ -268,21 +345,25 @@ def retrieve(law: str, article: Optional[str] = None, keyword: Optional[str] = N
             "metadata": {k: v for k, v in selected.items() if k not in ("content",)},
             "explain": {
                 "L1_yuandian_pkulaw": "checked" if "yuandian_pkulaw" in chain else "skipped (no key or no result)",
-                "L2_cache": "checked" if "cache" in chain else "skipped (no hit)",
-                "L3_flk_npc": "checked" if "flk_npc" in chain else "skipped (no file)",
-                "L4_fallback": "reached" if selected_level == 4 else "not reached",
+                "L2_prc_law_data": "checked" if "prc_law_data" in chain else "skipped (unavailable or no hit)",
+                "L3_cache": "checked" if "cache" in chain else "skipped (no hit)",
+                "L4_flk_npc": "checked" if "flk_npc" in chain else "skipped (no file)",
+                "L5_gov_cn": "checked" if "gov_cn" in chain else "skipped (no response)",
+                "L6_fallback": "reached" if selected_level == 6 else "not reached",
             } if explain else "none",
         }
     return {
         "found": False,
-        "selected_level": 4,
+        "selected_level": 6,
         "source_chain": chain,
-        "label": LABEL_BY_LEVEL[4],
+        "label": LABEL_BY_LEVEL[6],
         "explain": {
             "L1_yuandian_pkulaw": "skipped (no key or no result)",
-            "L2_cache": "skipped (no hit)",
-            "L3_flk_npc": "skipped (no file)",
-            "L4_fallback": "reached — [待检索]",
+            "L2_prc_law_data": "skipped (unavailable or no hit)",
+            "L3_cache": "skipped (no hit)",
+            "L4_flk_npc": "skipped (no file)",
+            "L5_gov_cn": "skipped (no response)",
+            "L6_fallback": "reached — [待检索]",
         } if explain else "none",
     }
 
