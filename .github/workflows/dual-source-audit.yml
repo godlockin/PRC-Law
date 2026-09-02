@@ -74,24 +74,24 @@ jobs:
           import json
           from pathlib import Path
           out = Path("docs/dashboard/SUMMARY.md")
-          with out.open("w", encoding="utf-8") as f:
-              f.write("# PRC-Law 双源数据审计面板\n\n")
-              f.write(f"更新时间: {__import__('datetime').datetime.now().isoformat()}\n\n")
+          with out.open("w", encoding="utf-8") as fp:
+              fp.write("# PRC-Law 双源数据审计面板\n\n")
+              fp.write(f"更新时间: {__import__('datetime').datetime.now().isoformat()}\n\n")
               # data_audit summary
-              for f in ["docs/dashboard/data_audit_latest.json", "data/audit/w33_benchmark.json"]:
-                  p = Path(f)
+              for src_path in ["docs/dashboard/data_audit_latest.json", "data/audit/w33_benchmark.json"]:
+                  p = Path(src_path)
                   if p.exists():
                       try:
                           data = json.loads(p.read_text(encoding="utf-8"))
                           summary = data.get("summary", {})
                           if summary:
-                              f.write(f"## {p.stem}\n\n")
-                              f.write("| 指标 | 数值 |\n|------|------|\n")
+                              fp.write(f"## {p.stem}\n\n")
+                              fp.write("| 指标 | 数值 |\n|------|------|\n")
                               for k, v in summary.items():
-                                  f.write(f"| {k} | {v} |\n")
-                              f.write("\n")
+                                  fp.write(f"| {k} | {v} |\n")
+                              fp.write("\n")
                       except Exception as e:
-                          f.write(f"⚠️ {p}: {e}\n\n")
+                          fp.write(f"⚠️ {p}: {e}\n\n")
           print("✅ Dashboard SUMMARY.md 生成")
           EOF
 
