@@ -185,8 +185,9 @@ def main():
         try:
             case_data = json.loads(Path(args.case_json).read_text(encoding="utf-8"))
             case_id = case_data.get("case_id", "")
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"⚠ 读取 case JSON 失败 ({args.case_json}): {e}",
+                  file=sys.stderr)
         if case_id:
             args.output_dir = str(ws.matters_dir / case_id)
         else:
@@ -392,8 +393,8 @@ def main():
                 s.notes.append(f"⚠ {n_exp} 个时效已过期")
             if n_cri:
                 s.notes.append(f"⚠ {n_cri} 个时效 ≤ 7 天")
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"⚠ 时效汇总失败: {e}", file=sys.stderr)
         s.status = "done"
         print(f"  ✅ 时效报告: {deadline_path} (模式: {step_mode})")
     else:

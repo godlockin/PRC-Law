@@ -237,10 +237,12 @@ class MediationHintEngine:
     """调解策略生成器"""
 
     def __init__(self, use_case_client: bool = True,
-                 calibration: Optional[dict] = None):
+                 calibration: Optional[dict] = None,
+                 cases_db: Optional[Path] = None):
         self.use_case_client = use_case_client
         self._case_client = None
         self._calibration = calibration  # 本地校准数据 {案由: {win_rate, confidence}}
+        self._cases_db = cases_db  # 本地案件库路径 (cn-case-loader 索引的 cases.db)
         if use_case_client:
             try:
                 from case_client import CaseClient
@@ -317,7 +319,7 @@ class MediationHintEngine:
         if inp.lawyer_role == "被告":
             win_rate = 1.0 - win_rate  # 被告角度 = 1 - 原告胜诉率
 
-        # 3. 类案统计校准 (ChatLaw 2024 民事 + cail2018 刑事 + 规则基线)
+        # 3. 类案统计校准 (ChatLaw 2024 民事 + W24 CLCC/LegalSFT 民事 QA + cail2018 刑事 + 规则基线)
         class_refs = []
         if self._case_client and self._case_client.is_available():
             # 3.1 ChatLaw (2024, MIT) 民事类案检索 — 首选
@@ -336,7 +338,39 @@ class MediationHintEngine:
             except Exception:
                 pass
 
-            # 3.2 cail2018 (刑事) — 仅做辅助, 不替代
+            # 3.2 W24 民事案由分类 (CLCC: 56K 条, CC-BY-NC, 劳动/合同/消费/侵权/婚姻/房产)
+            try:
+                clcc_hits = list(self._case_client.search_clcc(
+                    case_type=inp.case_type, limit=5))
+                if clcc_hits:
+                    class_refs.append(
+                        f"CLCC (2024, 56K, CC-BY-NC): {inp.case_type} 命中 {len(clcc_hits)} 条民事咨询"
+                    )
+                    for i, hit in enumerate(clcc_hits[:3], 1):
+                        if hit.fact:
+                            class_refs.append(
+                                f"  类案{i}: {hit.instruction[:80]}..."
+                            )
+            except Exception:
+                pass
+
+            # 3.3 W24 民事 QA (LegalSFT: 19K 条, CC-BY-NC, 婚姻/合同/房产/信用卡)
+            try:
+                legal_sft_hits = list(self._case_client.search_legal_sft(
+                    query=inp.case_type, limit=3))
+                if legal_sft_hits:
+                    class_refs.append(
+                        f"LegalSFT (2024, 19K, CC-BY-NC): {inp.case_type} 命中 {len(legal_sft_hits)} 条民事 QA"
+                    )
+                    for i, hit in enumerate(legal_sft_hits[:2], 1):
+                        if hit.fact:
+                            class_refs.append(
+                                f"  QA{i}: {hit.fact[:80]}..."
+                            )
+            except Exception:
+                pass
+
+            # 3.4 cail2018 (刑事) — 仅做辅助, 不替代
             try:
                 accusation = self._map_to_criminal_accusation(inp.case_type)
                 if accusation:
@@ -348,7 +382,7 @@ class MediationHintEngine:
             except Exception:
                 pass
 
-        # 3.3 基线来源标注 (本地校准 vs 规则)
+        # 3.5 基线来源标注 (本地校准 vs 规则)
         class_refs.append(
             f"基线来源: {base_source} | {inp.case_type} 原告胜诉率 ≈ {base_rate:.0%} (置信: {base_conf})"
         )

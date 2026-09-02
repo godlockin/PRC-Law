@@ -67,6 +67,26 @@ HF_DATASETS = {
         "type": "刑事 (故意伤害/盗窃/...)",
         "note": "仅学术/非商用, 替代 cail2018",
     },
+    # W24 新增: 民事案由分类 (劳动/合同/侵权/婚姻/房产)
+    "clcc": {
+        "repo": "gehits/Chinese-Legal-Case-Classification-Dataset",
+        "size_hint": "56K 条, 124 MB",
+        "fields": ["instruction", "answer"],
+        "license": "CC BY-NC 4.0",
+        "year": 2024,
+        "type": "民事 (劳动/合同/消费/侵权/婚姻/房产)",
+        "note": "民事咨询多选分类, instruction 字段含案情+法条引用, 关键词检索",
+    },
+    # W24 新增: 民事法律 QA (含婚姻/合同/房产/信用卡/旅游)
+    "legal-sft": {
+        "repo": "noah248/chinese-legal-sft",
+        "size_hint": "19,332 Q&A, 13.8 MB",
+        "fields": ["instruction", "input", "output", "complexity"],
+        "license": "CC BY-NC 4.0",
+        "year": 2024,
+        "type": "民事 (婚姻/合同/房产/信用卡)",
+        "note": "Alpaca 格式 QA, 律师视角输出, 含 complexity 质量分数",
+    },
 }
 
 # 类案检索专项数据集 (MTEB 标准)
@@ -187,7 +207,11 @@ class CaseClient:
             CaseHit 对象
         """
         if source != "cail2018":
-            raise NotImplementedError(f"Source {source} not yet implemented, only cail2018")
+            raise ValueError(
+                f"source={source!r} 不支持. "
+                f"cail2018 用 search(source='cail2018'); "
+                f"其他源用专用方法: search_chatlaw / search_clcc / search_legal_sft / search_lecardv2"
+            )
         if not self.is_available():
             return
         from datasets import load_dataset
@@ -289,6 +313,95 @@ class CaseClient:
                 case_id=str(item.get("id", "")),
                 instruction=item.get("instruction", ""),
                 title=f"[ChatLaw {tag}]",
+            )
+            count += 1
+
+    def search_clcc(self,
+                    case_type: Optional[str] = None,
+                    query: Optional[str] = None,
+                    limit: int = 10) -> Iterator[CaseHit]:
+        """Chinese-Legal-Case-Classification-Dataset (W24 新增)
+
+        适用: 民事选择题 QA — 劳动/合同/消费/侵权/婚姻/房产
+        注意: 这是选择题格式, answer 是 ABCD, 案由从 input 字段提取
+        Args:
+            case_type: 案由过滤 (如 "合同", "劳动", "婚姻")
+            query: 关键词 (匹配 input)
+            limit: 最多返回
+        """
+        if "clcc" not in self._datasets_loaded:
+            try:
+                from datasets import load_dataset
+                self._datasets_loaded["clcc"] = load_dataset(
+                    "gehits/Chinese-Legal-Case-Classification-Dataset",
+                    split="train",
+                    streaming=True,
+                )
+            except Exception as e:
+                print(f"⚠ CLCC 加载失败: {e}", file=sys.stderr)
+                return
+        ds = self._datasets_loaded["clcc"]
+        count = 0
+        for item in ds:
+            if count >= limit:
+                break
+            inp = str(item.get("input", ""))
+            if case_type and case_type not in inp:
+                continue
+            if query and query not in inp:
+                continue
+            yield CaseHit(
+                source="clcc",
+                fact=inp[:500],
+                case_type=case_type or "民事",
+                instruction=str(item.get("instruction", ""))[:200],
+                title=f"[CLCC {case_type or '民事'}]",
+            )
+            count += 1
+
+    def search_legal_sft(self,
+                         query: Optional[str] = None,
+                         complexity: Optional[str] = None,
+                         limit: int = 10) -> Iterator[CaseHit]:
+        """Chinese Legal SFT Dataset (W24 新增, 民事 QA)
+
+        适用: 民事律师视角 QA — 婚姻/合同/房产/信用卡/旅游纠纷
+        Args:
+            query: 关键词 (匹配 instruction/input)
+            complexity: 复杂度过滤 (low/medium/high)
+            limit: 最多返回
+        """
+        if "legal-sft" not in self._datasets_loaded:
+            try:
+                from datasets import load_dataset
+                self._datasets_loaded["legal-sft"] = load_dataset(
+                    "noah248/chinese-legal-sft",
+                    split="train",
+                    streaming=True,
+                )
+            except Exception as e:
+                print(f"⚠ legal-sft 加载失败: {e}", file=sys.stderr)
+                return
+        ds = self._datasets_loaded["legal-sft"]
+        count = 0
+        for item in ds:
+            if count >= limit:
+                break
+            instruction = str(item.get("instruction", ""))
+            inp = str(item.get("input", ""))
+            output = str(item.get("output", ""))
+            comp = str(item.get("complexity", ""))
+            if complexity and comp != complexity:
+                continue
+            blob = instruction + inp
+            if query and query not in blob:
+                continue
+            yield CaseHit(
+                source="legal-sft",
+                fact=inp[:500] if inp else instruction[:500],
+                case_type=instruction[:60],
+                instruction=instruction,
+                title=f"[LegalSFT {comp}]",
             )
             count += 1
 

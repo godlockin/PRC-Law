@@ -90,8 +90,8 @@ def log(msg: str) -> None:
     try:
         with (LAW_DIR / ".fetch.log").open("a") as f:
             f.write(f"[{datetime.now().isoformat()}] {msg}\n")
-    except Exception:
-        pass
+    except Exception as e:
+        print(f"⚠ 写 .fetch.log 失败: {e}", file=sys.stderr)
 
 
 class NPCSession:
@@ -249,8 +249,8 @@ def load_manifest() -> dict:
     if MANIFEST_PATH.exists():
         try:
             return json.loads(MANIFEST_PATH.read_text())
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"⚠ 读 manifest 失败 ({MANIFEST_PATH}): {e}", file=sys.stderr)
     return {"laws": {}, "last_run": None}
 
 

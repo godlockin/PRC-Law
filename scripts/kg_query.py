@@ -96,8 +96,9 @@ def load_matters_index() -> dict:
         if matter_yaml.exists():
             try:
                 info.update(_parse_simple_yaml(matter_yaml.read_text()))
-            except Exception:
-                pass
+            except Exception as e:
+                print(f"⚠ 解析 matter_yaml 失败 ({matter_dir.name}): {e}",
+                      file=sys.stderr)
         matters[matter_dir.name] = info
     return matters
 

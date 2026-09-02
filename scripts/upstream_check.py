@@ -53,8 +53,8 @@ def log(msg: str) -> None:
         STATE_DIR.mkdir(parents=True, exist_ok=True)
         with LOG_FILE.open("a") as f:
             f.write(f"[{datetime.now().isoformat()}] {msg}\n")
-    except Exception:
-        pass
+    except Exception as e:
+        print(f"⚠ 写 upstream-state.log 失败: {e}", file=sys.stderr)
 
 
 def read_local_version() -> str:

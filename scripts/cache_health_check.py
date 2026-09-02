@@ -54,8 +54,8 @@ def log(msg: str) -> None:
         STATE_DIR.mkdir(parents=True, exist_ok=True)
         with (STATE_DIR / "cache-health.log").open("a") as f:
             f.write(f"[{datetime.now().isoformat()}] {msg}\n")
-    except Exception:
-        pass
+    except Exception as e:
+        print(f"⚠ 写 cache-health.log 失败: {e}", file=sys.stderr)
 
 
 def load_cache() -> dict:
@@ -288,8 +288,9 @@ def main() -> int:
                 ac = json.loads(alerts_path.read_text())
                 if ac.get("alert_count", 0) > 0:
                     print(f"   ⚠ {ac['alert_count']} alerts → see {ALERT_FILE}")
-            except Exception:
-                pass
+            except Exception as e:
+                print(f"⚠ 读 alerts 失败 ({alerts_path}): {e}",
+                      file=sys.stderr)
 
     return 0
 
