@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import json
 import os
+import sys
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
@@ -149,8 +150,9 @@ class DatasetClient:
             try:
                 e = json.loads(line)
                 items[e["id"]] = e
-            except Exception:
-                pass
+            except Exception as exc:
+                print(f"⚠ 索引行解析失败: {exc} | 行: {line[:80]}",
+                      file=sys.stderr)
         self._index_cache = items
         return items
 
@@ -198,8 +200,9 @@ class DatasetClient:
 
         # 按 article 查找
         if article:
-            # article 可能是 "577" 或 "第577条" 或 "五百七十七"
-            art_num = article.replace("第", "").replace("条", "").strip()
+            # article 可能是 int / "577" / "第577条" / "五百七十七"
+            article_str = str(article)
+            art_num = article_str.replace("第", "").replace("条", "").strip()
             text = arts_by_int.get(art_num)
             if not text:
                 # 尝试中文转阿拉伯
