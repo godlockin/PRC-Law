@@ -41,9 +41,13 @@ jobs:
           PKULAW_TOKEN: ${{ secrets.PKULAW_TOKEN }}
         run: |
           cd "$GITHUB_WORKSPACE"
-          python3 scripts/data_audit.py --output docs/dashboard/data_audit_latest.json
-          # 复制当前报告到历史 (保留对比)
-          cp docs/dashboard/data_audit_latest.json "docs/dashboard/data_audit_$(date +%Y%m%d-%H%M).json"
+          mkdir -p docs/dashboard data/audit
+          # 输出落到 data/audit/ (W31 path-traversal 白名单内), 再 cp 到 docs/dashboard
+          python3 scripts/data_audit.py --output data/audit/data_audit_latest.json
+          cp data/audit/data_audit_latest.json docs/dashboard/data_audit_latest.json
+          # 历史快照
+          DATE=$(date +%Y%m%d-%H%M)
+          cp data/audit/data_audit_latest.json "data/audit/data_audit_${DATE}.json"
 
       - name: Run W33 benchmark (双盲类案覆盖度)
         env:
@@ -59,7 +63,8 @@ jobs:
         # 真跑需手动 workflow_dispatch + 删除 --dry-run
         run: |
           cd "$GITHUB_WORKSPACE"
-          python3 scripts/w32_fill_gaps.py --dry-run > docs/dashboard/w32_gaps_latest.txt
+          python3 scripts/w32_fill_gaps.py --dry-run > data/audit/w32_gaps_latest.txt
+          cp data/audit/w32_gaps_latest.txt docs/dashboard/w32_gaps_latest.txt
 
       - name: Generate dashboard summary
         run: |
