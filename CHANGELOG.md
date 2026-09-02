@@ -5,6 +5,65 @@
 
 ## [未发布]
 
+### 新增 · 双源数据审计 GitHub Actions cron (W35)
+
+**`.github/workflows/dual-source-audit.yml`** (新) — 周级自动跑 `data_audit.py` + `w33_benchmark.py` + `w32_fill_gaps.py --dry-run`:
+- **每周二 03:00 UTC** (北京时间 11:00) — 错跟 benchmark 周一冲撞,北大法宝每天 10K 积分,避免周一就用完
+- **手动触发**: `workflow_dispatch`
+- **触发文件**: scripts/data_audit.py / w32_fill_gaps.py / w33_benchmark.py / pkulaw_mcp_bridge.py / retrieval_router.py
+- **Artifact**: 保留 90 天 (比 benchmark 长,数据缺口跟踪用)
+- **dashboard**: docs/dashboard/SUMMARY.md 自动生成
+- **自动开 issue**: 发现新 prc-law-data 缺口时,自动开 `[W32] prc-law-data 缺口 N 条 (CI 自动报告)`
+- **Secrets**: `PKULAW_TOKEN` (北大法宝),`YUANDIAN_API_KEY` (元典,如果跑双源)
+- **安全**: `persist-credentials: false`,所有动态输入走 `env:` 转义,无 shell 拼接
+
+### 新增 · 构建期双线法条覆盖度审计 (W30)
+
+**自动审计脚本** (`scripts/data_audit.py`):pkulaw + prc-law-data 双线比对核心法律覆盖度。
+
+**测试集**: 48 条 (民法典 10 + 三大程序法 6 + 刑法 6 + 劳动公司消法 6 + 数据三法 10 + 司法解释 10)
+
+**首次审计结果** (`data/audit/dual_source_audit_20260902.json`):
+- **双源一致: 38/48 (79%)**
+- **仅 pkulaw: 10 条 (prc-law-data 缺失)**
+  - 3 部法规: 关键信息基础设施条例 / 个人信息出境标准合同办法 / 数据出境安全评估办法 (W6 声称 100% 覆盖但实际有缺口)
+  - 7 部司法解释 (slug=law- 前缀 hash 命名, slug_map 找不到完整法律名)
+
+**积分消耗**: pkulaw 1,200 积分 (远低于每日 10K 免费额度),元典 0 credit
+
+**Bug 修复**:
+- `dataset_client.py:204` — `article.replace()` 在传入 int 时崩溃 (`'int' object has no attribute 'replace'`),改为 `str(article).replace()`
+
+---
+
+### 新增 · 北大法宝 MCP 双源核验 (W28)
+
+**护栏 2 双源交叉核验真正落地** — 元典 + 北大法宝双商业 API,共享月配额 5000。
+
+**新增组件**:
+- `scripts/pkulaw_mcp_bridge.py` (新) — 北大法宝 MCP over HTTPS (streamablehttp),包装 10 个工具为 stdio bridge
+- `.mcp.json` — pkulaw 从旧的 HTTP 错配改为 stdio bridge
+- `scripts/retrieval_router.py` — `try_yuandian_pkulaw()` 双源调用,新增 `_deepest_text / _extract_pkulaw_url / _extract_pkulaw_field` 处理 pkulaw 三层 JSON-RPC wrapper
+- `.env.example` (新) — 统一配置占位符 (YUANDIAN_API_KEY / PKULAW_TOKEN / PRC_LAW_DATA_DIR 等)
+- `.gitignore` — 加 `.env` 排除
+- `_foundation/norm-verify/SKILL.md` v1.1.0 — 双源核验规则 + 工具调用表
+- `CLAUDE.md` — 护栏 2 改为元典+北大法宝双源,显式列月配额
+- `docs/lawyer-guide.md` Q11 — 律师启用 pkulaw 双源三 步
+- `README.md` — 双源免费额度说明 (北大法宝 10K 积分/天, 元典 5K/月)
+
+**测试结果** (10 个真实法条端到端):
+- 命中: 10/10
+- Label: 全部 `[单源—需复核: 北大法宝 {date}]` (元典 key 未设)
+- URL 提取: 10/10 完整 (含 [北大法宝](https://www.pkulaw.com/...))
+- Credit 消耗: 48 次 (远低于免费额度)
+
+**接入流程** (律师):
+1. https://mcp.pkulaw.com/console/points 注册
+2. `~/.zshrc` 加 `export PKULAW_TOKEN=<Bearer Token>`
+3. `source ~/.zshrc` 后即可在 AI 客户端说"用北大法宝核验..."
+
+---
+
 ### 新增 · 独立数据集仓库 prc-law-data (v8.3.0)
 
 PRC-Law 与法律数据集**解耦**, 新增 prc-law-data 独立仓库作为可选 submodule:

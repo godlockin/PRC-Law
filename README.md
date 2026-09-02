@@ -76,12 +76,21 @@
 3. **HTTP API**: `export PRC_LAW_DATA_URL=http://localhost:8765`
 
 **6 级 fallback** (`scripts/retrieval_router.py`):
-1. L1 元典/法宝 MCP (商业, 消耗 credit)
+1. L1 元典 + 北大法宝 双源核验 (商业, 消耗 credit) — W28 起双源真正落地
 2. **L2 prc-law-data 数据集** (零 credit, 默认首选) ⭐
 3. L3 本地 cache
 4. L4 国法库爬虫
 5. **L5 政府公开源** (spp.gov.cn + gov.cn) ⭐
 6. L6 [待检索]
+
+**双源免费额度**:
+- 北大法宝: 每天 10,000 积分 (当天有效),约 400 次精准查条
+- 元典: 每月 5,000 次 (共享配额 `PRC_LAW_YUANDIAN_QUOTA=5000`)
+- 配置: `export PKULAW_TOKEN=<Bearer Token>` (在 https://mcp.pkulaw.com/console/points 注册)
+
+**本地 vs CI 自动跑**:
+- 本地: 律师日常检索由 `~/.zshrc` 的 `PKULAW_TOKEN` 自动加载 (无配置也能用,降级 prc-law-data)
+- CI: GitHub Actions 周二 03:00 UTC 自动跑审计 (需仓库 secrets `PKULAW_TOKEN` + `YUANDIAN_API_KEY`);周报落在 `data/audit/dual_source_audit_*.json`
 
 详细见 `_foundation/cn-fallback-source/SKILL.md` + `prc-law-data/README.md`。
 
@@ -328,10 +337,16 @@ PRC-Law 是一套运行在 Claude Code 上的法律 Agent Skills 系统。它不
 
 ### 6.4 GitHub Actions 工作流
 
-- `.github/workflows/benchmark.yml`：每周一 02:00 UTC 自动跑 Benchmark
-- 触发条件：定时 / 手动 / 关键文件 push
-- 输出：上传 artifact 保留 30 天
-- 安全：`persist-credentials: false` 禁止自动 commit & push
+| 工作流 | 触发时机 | 职责 | Secrets |
+|------|---------|------|--------|
+| `benchmark.yml` | 每周一 02:00 UTC | 元典 API 检索能力 Benchmark (5 指导案例) | `YUANDIAN_API_KEY` |
+| `self-sync.yml` | 每周一 03:00 UTC | 远端版本漂移检测 + drift 时自动开 issue | — |
+| `dual-source-audit.yml` (W35) | 每周二 03:00 UTC | pkulaw+prc-law-data 双源法条覆盖度审计 + 反哺缺口 | `PKULAW_TOKEN` |
+
+- **触发条件**：定时 / 手动 (`workflow_dispatch`) / 关键文件 push
+- **输出**：上传 artifact (benchmark 30 天, dual-source 90 天)
+- **自动开 issue**：dual-source audit 发现新 prc-law-data 缺口时,自动开 issue (标题 `[W32] prc-law-data 缺口 N 条`)
+- **安全**：`persist-credentials: false` 禁止自动 commit & push;所有 untrusted 输入通过 `env:` 转义,不直接拼接 shell
 
 ### 6.5 故障降级
 
