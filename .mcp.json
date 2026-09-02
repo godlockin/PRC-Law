@@ -8,10 +8,10 @@
       }
     },
     "pkulaw": {
-      "type": "http",
-      "url": "https://apim-gw.pkulaw.com/${PKULAW_SERVICE_ID}/mcp",
-      "headers": {
-        "Authorization": "Bearer ${PKULAW_API_KEY}"
+      "command": "python3",
+      "args": ["scripts/pkulaw_mcp_bridge.py"],
+      "env": {
+        "PKULAW_TOKEN": "${PKULAW_TOKEN}"
       }
     }
   }

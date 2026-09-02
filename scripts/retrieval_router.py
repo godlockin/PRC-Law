@@ -33,6 +33,7 @@ import argparse
 import json
 import os
 import re
+import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -108,15 +109,99 @@ def _yuandian_credit_increment() -> None:
     _yuandian_credit_write(_yuandian_credit_read() + 1)
 
 
+def _extract_pkulaw_url(pkulaw_result: dict) -> str:
+    """从 pkulaw result 提取北大法宝直链
+
+    pkulaw bridge 返回双层结构 (因为 bridge 内部又用 JSON-RPC 调了一次):
+    L1 outer:  {"jsonrpc":"2.0","id":null,"result":{"content":[{"text":"..."}]}}
+    L2 inner:  text 里 = {"jsonrpc":"2.0","id":1,"result":{"content":[{"text":"..."}]}}
+    L3 data:   最里层 text 里 = {"Message":"成功","Data":{...Url...}}
+    Data.Url 是 markdown "[北大法宝](https://...)" — 提取其中的 URL
+    """
+    try:
+        text = _deepest_text(pkulaw_result)
+        data = json.loads(text)
+        url_field = data.get("Data", {}).get("Url", "") or data.get("data", {}).get("Url", "")
+        if not url_field:
+            return ""
+        import re as _re
+        m = _re.search(r'\((https?://[^\)]+)\)', url_field)
+        if m:
+            return m.group(1)
+        if url_field.startswith("http"):
+            return url_field
+        return ""
+    except Exception:
+        return ""
+
+
+def _extract_pkulaw_field(pkulaw_result: dict, *path: str) -> str:
+    """从 pkulaw 双层结构提取字段"""
+    try:
+        text = _deepest_text(pkulaw_result)
+        data = json.loads(text)
+        cur = data
+        for p in path:
+            cur = cur.get(p, {}) if isinstance(cur, dict) else {}
+        if isinstance(cur, str):
+            return cur
+        if isinstance(cur, list) and cur:
+            return ", ".join(str(x) for x in cur)
+        return str(cur)
+    except Exception:
+        return ""
+
+
+def _deepest_text(pkulaw_result: dict) -> str:
+    """从嵌套 JSON-RPC wrapper 找到最内层的 text 字段
+
+    pkulaw bridge 实际输出 (双层包装):
+    {
+      "jsonrpc": "2.0", "id": null,
+      "result": {
+        "content": [
+          {"type": "text", "text": "{jsonrpc:..., result:{content:[{text:\"{Data.Url}\"}]}}"}
+        ]
+      }
+    }
+    """
+    try:
+        cur = pkulaw_result
+        for _ in range(5):
+            if not isinstance(cur, dict):
+                break
+            content = cur.get("result", {}).get("content")
+            if not (isinstance(content, list) and content):
+                break
+            inner_text = content[0].get("text", "")
+            if not inner_text:
+                break
+            # 尝试下钻 — 如果 inner_text 是合法 JSON 且有 result.content 嵌套
+            try:
+                parsed = json.loads(inner_text)
+                if isinstance(parsed, dict) and "result" in parsed:
+                    cur = parsed
+                    continue
+            except json.JSONDecodeError:
+                pass
+            # 不嵌套,这就是最内层
+            return inner_text
+        return "{}"
+    except Exception:
+        return "{}"
+
+
 def try_yuandian_pkulaw(law: str, article: Optional[str], keyword: Optional[str]) -> dict | None:
     """
-    L1: 元典/法宝 MCP
-    调用方式:
-    - 调 yuandian_mcp_bridge.py (stdio) 或 HTTP(SSE)
-    - 调用 pkulaw MCP
-    这里留好签名, 实际接入需 .mcp.json 配置
+    L1: 元典 + 北大法宝 双源核验 (W28)
+    - 元典: stdio bridge → REST API
+    - 北大法宝: stdio bridge → MCP over HTTPS
+    - 双源一致 → [已确认: 双源]
+    - 仅元典 → [单源—需复核: 元典]
+    - 仅法宝 → [单源—需复核: 北大法宝]
+    - 都无 → 返回 None, 让 fallback 链继续
 
-    Credit 控制 (W8.2):
+    Credit 控制 (W8.2 + W28 双计):
       - 维护本地 counter (~/.cache/prc-law/yuandian_credit.json)
       - 配额耗尽 (call_count >= PRC_LAW_YUANDIAN_QUOTA) → 直接返回 None
       - 失败/超时计入配额 (防止恶意重试)
@@ -136,18 +221,23 @@ def try_yuandian_pkulaw(law: str, article: Optional[str], keyword: Optional[str]
         return None
     yuandian_cfg = config.get("mcpServers", {}).get("yuandian") or config.get("yuandian")
     pkulaw_cfg = config.get("mcpServers", {}).get("pkulaw") or config.get("pkulaw")
-    # API key 缺失 → 跳过 L1
+    # API key 检查 (允许 bridge 从 ~/.zshrc 自动 fallback)
     yuandian_key = os.environ.get("YUANDIAN_API_KEY", "")
-    if not yuandian_key and not yuandian_cfg:
+    pkulaw_token = os.environ.get("PKULAW_TOKEN", "")
+    # 即使 env 没设,只要 .mcp.json 注册了 bridge + bridge 文件存在,就让 bridge 自己尝试拿 token
+    if not yuandian_key and not yuandian_cfg and not pkulaw_token and not pkulaw_cfg:
         return None
+    yuandian_attempt = bool(yuandian_key) or bool(yuandian_cfg)
+    pkulaw_attempt = bool(pkulaw_token) or bool(pkulaw_cfg)
 
-    # 3. 实际调 MCP — 这里需要 stdio 调用或 HTTP, 简化: 留 marker
-    # 真接入参考 yuandian_mcp_bridge.py
+    # 3. 双源调用 — 元典 + 北大法宝
+    yuandian_result = None
+    pkulaw_result = None
+
+    # 3.1 元典
     try:
-        # 尝试调本地 bridge
         bridge = ROOT / "scripts" / "yuandian_mcp_bridge.py"
-        if bridge.exists() and yuandian_key:
-            import subprocess
+        if bridge.exists() and yuandian_attempt:
             payload = json.dumps({
                 "method": "law.search",
                 "params": {"law": law, "article": article, "keyword": keyword},
@@ -159,41 +249,82 @@ def try_yuandian_pkulaw(law: str, article: Optional[str], keyword: Optional[str]
                 text=True,
                 timeout=10,
             )
-            # 4. 计入配额 (W8.2) — 成功失败都计 (防滥用)
             _yuandian_credit_increment()
             if r.returncode == 0 and r.stdout.strip():
                 try:
                     parsed = json.loads(r.stdout)
-                    # JSON-RPC error 协议: {"jsonrpc":"2.0","id":N,"error":{...}}
-                    # 这种不算 L1 命中, 应该让 fallback 链继续
-                    if isinstance(parsed, dict) and "error" in parsed:
-                        return None
-                    # 业务层 result=null 也算 miss
-                    if isinstance(parsed, dict) and parsed.get("result") is None:
-                        return None
-                    return parsed
+                    if isinstance(parsed, dict) and "result" in parsed and parsed["result"]:
+                        yuandian_result = parsed
                 except json.JSONDecodeError:
-                    return None
+                    pass
     except Exception:
-        # 超时/异常也计入配额 (防止一直重试)
         _yuandian_credit_increment()
-        pass
+
+    # 3.2 北大法宝 (W28 新增)
+    try:
+        bridge = ROOT / "scripts" / "pkulaw_mcp_bridge.py"
+        if bridge.exists() and pkulaw_attempt:
+            payload = json.dumps({
+                "method": "tools/call",
+                "params": {
+                    "name": "get_law_item_content",
+                    "arguments": {
+                        "title": law,
+                        "tiao_num": article,
+                    },
+                },
+            }, ensure_ascii=False)
+            r = subprocess.run(
+                [sys.executable, str(bridge)],
+                input=payload,
+                capture_output=True,
+                text=True,
+                timeout=15,
+            )
+            _yuandian_credit_increment()  # 双源共配额池
+            if r.returncode == 0 and r.stdout.strip():
+                try:
+                    parsed = json.loads(r.stdout)
+                    if isinstance(parsed, dict) and "result" in parsed:
+                        pkulaw_result = parsed
+                except json.JSONDecodeError:
+                    pass
+    except Exception:
+        _yuandian_credit_increment()
+
+    # 4. 双源合成 — 一致 [已确认: 双源], 单源 [单源—需复核]
+    if yuandian_result and pkulaw_result:
+        # 双源命中, 优先元典 (更老牌, 法宝补权威)
+        return {
+            "content": yuandian_result.get("content", yuandian_result),
+            "source": "yuandian+pkulaw",
+            "source_detail": "双源核验一致",
+            "label": LABEL_BY_LEVEL[1].format(date=_now_date()),
+            "pkulaw_url": _extract_pkulaw_url(pkulaw_result),
+            "yuandian_data": yuandian_result,
+            "pkulaw_data": pkulaw_result,
+        }
+    if yuandian_result:
+        return {
+            "content": yuandian_result.get("content", yuandian_result),
+            "source": "yuandian_only",
+            "source_detail": "北大法宝未命中或不可用",
+            "label": "[单源—需复核: 元典 {date}]".format(date=_now_date()),
+            "yuandian_data": yuandian_result,
+        }
+    if pkulaw_result:
+        return {
+            "content": pkulaw_result.get("content", pkulaw_result),
+            "source": "pkulaw_only",
+            "source_detail": "元典未命中或不可用",
+            "label": "[单源—需复核: 北大法宝 {date}]".format(date=_now_date()),
+            "pkulaw_url": _extract_pkulaw_url(pkulaw_result),
+            "pkulaw_data": pkulaw_result,
+        }
     return None
 
 
-def try_prc_law_data(law: str, article: Optional[str], keyword: Optional[str]) -> dict | None:
-    """L2: prc-law-data 数据集 (vendor submodule / 环境变量路径 / HTTP API)
 
-    优先于本地 cache (因为数据更全 + 法条结构化 + 零 credit).
-    """
-    try:
-        # 延迟 import, 避免 dataset_client 不可用时整个模块挂掉
-        from dataset_client import DatasetClient
-    except ImportError:
-        return None
-    client = DatasetClient()
-    if not client.is_available():
-        return None
     hit = client.lookup(law, article, keyword)
     if not hit:
         return None
@@ -350,8 +481,8 @@ def try_gov_cn(law: str, article: Optional[str], keyword: Optional[str]) -> dict
                     return parsed
             except json.JSONDecodeError:
                 pass
-    except Exception:
-        pass
+    except Exception as e:
+        print(f"⚠ gov_cn 降级源失败: {e}", file=sys.stderr)
     return None
 
 
