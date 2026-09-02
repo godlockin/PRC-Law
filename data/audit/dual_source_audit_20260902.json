@@ -1,0 +1,1026 @@
+{
+  "audit_meta": {
+    "date": "2026-09-02T13:08:59.386084",
+    "cases_total": 48,
+    "sources": [
+      "pkulaw",
+      "prc-law-data"
+    ]
+  },
+  "cases": [
+    {
+      "law": "中华人民共和国民法典",
+      "article": 1,
+      "category": "consistent",
+      "expected": "基本规定",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "为了保护民事主体的合法权益，调整民事关系，维护社会和经济秩序，适应中国特色社会主义发展要求，弘扬社会主义核心价值观，根据宪法，制定本法。",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "https://www.pkulaw.com/chl/aa00daaeb5a4fe4ebdfb.html?way=mcp#tiao_1.0",
+          "content_preview": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\n  \\\"Message\\\": \\\"成功\\\",\\n  \\\"Data\\\": {\\n    \\\"Title\\\": \\\"中华人民共和国民法典\\\",\\n    \\\"Url\\\": "
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "中华人民共和国民法典",
+      "article": 13,
+      "category": "consistent",
+      "expected": "胎儿利益",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "自然人从出生时起到死亡时止，具有民事权利能力，依法享有民事权利，承担民事义务。",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "https://www.pkulaw.com/chl/aa00daaeb5a4fe4ebdfb.html?way=mcp#tiao_13.0",
+          "content_preview": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\n  \\\"Message\\\": \\\"成功\\\",\\n  \\\"Data\\\": {\\n    \\\"Title\\\": \\\"中华人民共和国民法典\\\",\\n    \\\"Url\\\": "
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "中华人民共和国民法典",
+      "article": 116,
+      "category": "consistent",
+      "expected": "法定代表人",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "物权的种类和内容，由法律规定。",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "https://www.pkulaw.com/chl/aa00daaeb5a4fe4ebdfb.html?way=mcp#tiao_116.0",
+          "content_preview": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\n  \\\"Message\\\": \\\"成功\\\",\\n  \\\"Data\\\": {\\n    \\\"Title\\\": \\\"中华人民共和国民法典\\\",\\n    \\\"Url\\\": "
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "中华人民共和国民法典",
+      "article": 143,
+      "category": "consistent",
+      "expected": "民事行为能力",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "具备下列条件的民事法律行为有效：\n（一）行为人具有相应的民事行为能力；\n（二）意思表示真实；\n（三）不违反法律、行政法规的强制性规定，不违背公序良俗。",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "https://www.pkulaw.com/chl/aa00daaeb5a4fe4ebdfb.html?way=mcp#tiao_143.0",
+          "content_preview": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\n  \\\"Message\\\": \\\"成功\\\",\\n  \\\"Data\\\": {\\n    \\\"Title\\\": \\\"中华人民共和国民法典\\\",\\n    \\\"Url\\\": "
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "中华人民共和国民法典",
+      "article": 188,
+      "category": "consistent",
+      "expected": "诉讼时效 3年",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "向人民法院请求保护民事权利的诉讼时效期间为三年。法律另有规定的，依照其规定。\n诉讼时效期间自权利人知道或者应当知道权利受到损害以及义务人之日起计算。法律另有规定的，依照其规定。但是，自权利受到损害之日起超过二十年的，人民法院不予保护，有特殊情况的，人民法院可以根据权利人的申请决定延长。",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "https://www.pkulaw.com/chl/aa00daaeb5a4fe4ebdfb.html?way=mcp#tiao_188.0",
+          "content_preview": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\n  \\\"Message\\\": \\\"成功\\\",\\n  \\\"Data\\\": {\\n    \\\"Title\\\": \\\"中华人民共和国民法典\\\",\\n    \\\"Url\\\": "
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "中华人民共和国民法典",
+      "article": 195,
+      "category": "consistent",
+      "expected": "时效中断",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "有下列情形之一的，诉讼时效中断，从中断、有关程序终结时起，诉讼时效期间重新计算：\n（一）权利人向义务人提出履行请求；\n（二）义务人同意履行义务；\n（三）权利人提起诉讼或者申请仲裁；\n（四）与提起诉讼或者申请仲裁具有同等效力的其他情形。",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "https://www.pkulaw.com/chl/aa00daaeb5a4fe4ebdfb.html?way=mcp#tiao_195.0",
+          "content_preview": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\n  \\\"Message\\\": \\\"成功\\\",\\n  \\\"Data\\\": {\\n    \\\"Title\\\": \\\"中华人民共和国民法典\\\",\\n    \\\"Url\\\": "
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "中华人民共和国民法典",
+      "article": 462,
+      "category": "consistent",
+      "expected": "财产共有",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "占有的不动产或者动产被侵占的，占有人有权请求返还原物；对妨害占有的行为，占有人有权请求排除妨害或者消除危险；因侵占或者妨害造成损害的，占有人有权依法请求损害赔偿。\n占有人返还原物的请求权，自侵占发生之日起一年内未行使的，该请求权消灭。\n第三编　合　　同\n第一分编　通　　则\n第一章　一般规定",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "https://www.pkulaw.com/chl/aa00daaeb5a4fe4ebdfb.html?way=mcp#tiao_462.0",
+          "content_preview": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\n  \\\"Message\\\": \\\"成功\\\",\\n  \\\"Data\\\": {\\n    \\\"Title\\\": \\\"中华人民共和国民法典\\\",\\n    \\\"Url\\\": "
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "中华人民共和国民法典",
+      "article": 577,
+      "category": "consistent",
+      "expected": "违约责任",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "当事人一方不履行合同义务或者履行合同义务不符合约定的，应当承担继续履行、采取补救措施或者赔偿损失等违约责任。",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "https://www.pkulaw.com/chl/aa00daaeb5a4fe4ebdfb.html?way=mcp#tiao_577.0",
+          "content_preview": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\n  \\\"Message\\\": \\\"成功\\\",\\n  \\\"Data\\\": {\\n    \\\"Title\\\": \\\"中华人民共和国民法典\\\",\\n    \\\"Url\\\": "
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "中华人民共和国民法典",
+      "article": 1062,
+      "category": "consistent",
+      "expected": "夫妻共同财产",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "夫妻在婚姻关系存续期间所得的下列财产，为夫妻的共同财产，归夫妻共同所有：\n（一）工资、奖金、劳务报酬；\n（二）生产、经营、投资的收益；\n（三）知识产权的收益；\n（四）继承或者受赠的财产，但是本法",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "https://www.pkulaw.com/chl/aa00daaeb5a4fe4ebdfb.html?way=mcp#tiao_1062.0",
+          "content_preview": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\n  \\\"Message\\\": \\\"成功\\\",\\n  \\\"Data\\\": {\\n    \\\"Title\\\": \\\"中华人民共和国民法典\\\",\\n    \\\"Url\\\": "
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "中华人民共和国民法典",
+      "article": 1165,
+      "category": "consistent",
+      "expected": "侵权责任",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "行为人因过错侵害他人民事权益造成损害的，应当承担侵权责任。\n依照法律规定推定行为人有过错，其不能证明自己没有过错的，应当承担侵权责任。",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "https://www.pkulaw.com/chl/aa00daaeb5a4fe4ebdfb.html?way=mcp#tiao_1165.0",
+          "content_preview": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\n  \\\"Message\\\": \\\"成功\\\",\\n  \\\"Data\\\": {\\n    \\\"Title\\\": \\\"中华人民共和国民法典\\\",\\n    \\\"Url\\\": "
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "中华人民共和国民事诉讼法",
+      "article": 126,
+      "category": "consistent",
+      "expected": "答辩期 15 天",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "人民法院应当保障当事人依照法律规定享有的起诉权利。对符合本法",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "https://www.pkulaw.com/chl/55ada7bc4fc9d8ccbdfb.html?way=mcp#tiao_126.0",
+          "content_preview": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\n  \\\"Message\\\": \\\"成功\\\",\\n  \\\"Data\\\": {\\n    \\\"Title\\\": \\\"中华人民共和国民事诉讼法(2023修正)\\\",\\n   "
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "中华人民共和国民事诉讼法",
+      "article": 216,
+      "category": "consistent",
+      "expected": "再审申请期",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "当事人申请再审，应当在判决、裁定发生法律效力后六个月内提出；有本法",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "https://www.pkulaw.com/chl/55ada7bc4fc9d8ccbdfb.html?way=mcp#tiao_216.0",
+          "content_preview": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\n  \\\"Message\\\": \\\"成功\\\",\\n  \\\"Data\\\": {\\n    \\\"Title\\\": \\\"中华人民共和国民事诉讼法(2023修正)\\\",\\n   "
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "中华人民共和国民事诉讼法",
+      "article": 253,
+      "category": "consistent",
+      "expected": "履行通知",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "被执行人未按执行通知履行法律文书确定的义务，人民法院有权向有关单位查询被执行人的存款、债券、股票、基金份额等财产情况。人民法院有权根据不同情形扣押、冻结、划拨、变价被执行人的财产。人民法院查询、扣押、冻结、划拨、变价的财产不得超出被执行人应当履行义务的范围。\n人民法院决定扣押、冻结、划拨、变价财产，应当作出裁定，并发出协助执行通知书，有关单位必须办理。",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "https://www.pkulaw.com/chl/55ada7bc4fc9d8ccbdfb.html?way=mcp#tiao_253.0",
+          "content_preview": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\n  \\\"Message\\\": \\\"成功\\\",\\n  \\\"Data\\\": {\\n    \\\"Title\\\": \\\"中华人民共和国民事诉讼法(2023修正)\\\",\\n   "
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "中华人民共和国刑事诉讼法",
+      "article": 33,
+      "category": "consistent",
+      "expected": "辩护权",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "的规定执行。",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "https://www.pkulaw.com/chl/5a06769be1274052bdfb.html?way=mcp#tiao_33.0",
+          "content_preview": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\n  \\\"Message\\\": \\\"成功\\\",\\n  \\\"Data\\\": {\\n    \\\"Title\\\": \\\"中华人民共和国刑事诉讼法(2018修正)\\\",\\n   "
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "中华人民共和国刑事诉讼法",
+      "article": 56,
+      "category": "consistent",
+      "expected": "取保候审",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "规定的以非法方法收集证据情形的，可以要求其对证据收集的合法性作出说明。\n人民检察院审查案件，对于需要补充侦查的，可以退回公安机关补充侦查，也可以自行侦查。\n对于补充侦查的案件，应当在一个月以内补充侦查完毕。补充侦查以二次为限。补充侦查完毕移送人民检察院后，人民检察院重新计算审查起诉期限。\n对于二次补充侦查的案件，人民检察院仍然认为证据不足，不符合起诉条件的，应当作出不起诉的决定。",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "https://www.pkulaw.com/chl/5a06769be1274052bdfb.html?way=mcp#tiao_56.0",
+          "content_preview": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\n  \\\"Message\\\": \\\"成功\\\",\\n  \\\"Data\\\": {\\n    \\\"Title\\\": \\\"中华人民共和国刑事诉讼法(2018修正)\\\",\\n   "
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "中华人民共和国行政诉讼法",
+      "article": 46,
+      "category": "consistent",
+      "expected": "起诉期限 6 个月",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "公民、法人或者其他组织直接向人民法院提起诉讼的，应当自知道或者应当知道作出行政行为之日起六个月内提出。法律另有规定的除外。\n因不动产提起诉讼的案件自行政行为作出之日起超过二十年，其他案件自行政行为作出之日起超过五年提起诉讼的，人民法院不予受理。",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "https://www.pkulaw.com/chl/76c54b08f88ee7efbdfb.html?way=mcp#tiao_46.0",
+          "content_preview": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\n  \\\"Message\\\": \\\"成功\\\",\\n  \\\"Data\\\": {\\n    \\\"Title\\\": \\\"中华人民共和国行政诉讼法(2017修正)\\\",\\n   "
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "中华人民共和国刑法",
+      "article": 13,
+      "category": "consistent",
+      "expected": "犯罪概念",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "一切危害国家主权、领土完整和安全，分裂国家、颠覆人民民主专政的政权和推翻社会主义制度，破坏社会秩序和经济秩序，侵犯国有财产或者劳动群众集体所有的财产，侵犯公民私人所有的财产，侵犯公民的人身权利、民主权利和其他权利，以及其他危害社会的行为，依照法律应当受刑罚处罚的，都是犯罪，但是情节显著轻微危害不大的，不认为是犯罪。",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "https://www.pkulaw.com/chl/3b70bb09d2971662bdfb.html?way=mcp#tiao_13.0",
+          "content_preview": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\n  \\\"Message\\\": \\\"成功\\\",\\n  \\\"Data\\\": {\\n    \\\"Title\\\": \\\"中华人民共和国刑法(2023修正)\\\",\\n    \\\""
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "中华人民共和国刑法",
+      "article": 14,
+      "category": "consistent",
+      "expected": "刑事责任年龄",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "明知自己的行为会发生危害社会的结果，并且希望或者放任这种结果发生，因而构成犯罪的，是故意犯罪。\n故意犯罪，应当负刑事责任。",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "https://www.pkulaw.com/chl/3b70bb09d2971662bdfb.html?way=mcp#tiao_14.0",
+          "content_preview": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\n  \\\"Message\\\": \\\"成功\\\",\\n  \\\"Data\\\": {\\n    \\\"Title\\\": \\\"中华人民共和国刑法(2023修正)\\\",\\n    \\\""
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "中华人民共和国刑法",
+      "article": 16,
+      "category": "consistent",
+      "expected": "无罪",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "行为在客观上虽然造成了损害结果，但是不是出于故意或者过失，而是由于不能抗拒或者不能预见的原因所引起的，不是犯罪。",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "https://www.pkulaw.com/chl/3b70bb09d2971662bdfb.html?way=mcp#tiao_16.0",
+          "content_preview": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\n  \\\"Message\\\": \\\"成功\\\",\\n  \\\"Data\\\": {\\n    \\\"Title\\\": \\\"中华人民共和国刑法(2023修正)\\\",\\n    \\\""
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "中华人民共和国刑法",
+      "article": 17,
+      "category": "consistent",
+      "expected": "未成年人",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "已满十六周岁的人犯罪，应当负刑事责任。\n已满十四周岁不满十六周岁的人，犯故意杀人、故意伤害致人重伤或者死亡、强奸、抢劫、贩卖毒品、放火、爆炸、投毒罪的，应当负刑事责任。\n已满十四周岁不满十八周岁的人犯罪，应当从轻或者减轻处罚。\n因不满十六周岁不予刑事处罚的，责令他的家长或者监护人加以管教；在必要的时候，也可以由政府收容教养。",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "https://www.pkulaw.com/chl/3b70bb09d2971662bdfb.html?way=mcp#tiao_17.0",
+          "content_preview": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\n  \\\"Message\\\": \\\"成功\\\",\\n  \\\"Data\\\": {\\n    \\\"Title\\\": \\\"中华人民共和国刑法(2023修正)\\\",\\n    \\\""
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "中华人民共和国刑法",
+      "article": 20,
+      "category": "consistent",
+      "expected": "正当防卫",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "为了使国家、公共利益、本人或者他人的人身、财产和其他权利免受正在进行的不法侵害，而采取的制止不法侵害的行为，对不法侵害人造成损害的，属于正当防卫，不负刑事责任。\n正当防卫明显超过必要限度造成重大损害的，应当负刑事责任，但是应当减轻或者免除处罚。\n对正在进行行凶、杀人、抢劫、强奸、绑架以及其他严重危及人身安全的暴力犯罪，采取防卫行为，造成不法侵害人伤亡的，不属于防卫过当，不负刑事责任。",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "https://www.pkulaw.com/chl/3b70bb09d2971662bdfb.html?way=mcp#tiao_20.0",
+          "content_preview": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\n  \\\"Message\\\": \\\"成功\\\",\\n  \\\"Data\\\": {\\n    \\\"Title\\\": \\\"中华人民共和国刑法(2023修正)\\\",\\n    \\\""
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "中华人民共和国刑法",
+      "article": 21,
+      "category": "consistent",
+      "expected": "紧急避险",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "为了使国家、公共利益、本人或者他人的人身、财产和其他权利免受正在发生的危险，不得已采取的紧急避险行为，造成损害的，不负刑事责任。\n紧急避险超过必要限度造成不应有的损害的，应当负刑事责任，但是应当减轻或者免除处罚。\n第一款中关于避免本人危险的规定，不适用于职务上、业务上负有特定责任的人。\n第二节　犯罪的预备、未遂和中止",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "https://www.pkulaw.com/chl/3b70bb09d2971662bdfb.html?way=mcp#tiao_21.0",
+          "content_preview": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\n  \\\"Message\\\": \\\"成功\\\",\\n  \\\"Data\\\": {\\n    \\\"Title\\\": \\\"中华人民共和国刑法(2023修正)\\\",\\n    \\\""
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "中华人民共和国劳动合同法",
+      "article": 10,
+      "category": "consistent",
+      "expected": "订立合同",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "建立劳动关系，应当订立书面劳动合同。\n已建立劳动关系，未同时订立书面劳动合同的，应当自用工之日起一个月内订立书面劳动合同。\n用人单位与劳动者在用工前订立劳动合同的，劳动关系自用工之日起建立。",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "https://www.pkulaw.com/chl/7ab5e7d605f859e6bdfb.html?way=mcp#tiao_10.0",
+          "content_preview": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\n  \\\"Message\\\": \\\"成功\\\",\\n  \\\"Data\\\": {\\n    \\\"Title\\\": \\\"中华人民共和国劳动合同法(2012修正)\\\",\\n   "
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "中华人民共和国劳动合同法",
+      "article": 39,
+      "category": "consistent",
+      "expected": "过错性辞退",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "劳动者有下列情形之一的，用人单位可以解除劳动合同：\n（一）在试用期间被证明不符合录用条件的；\n（二）严重违反用人单位的规章制度的；\n（三）严重失职，营私舞弊，给用人单位造成重大损害的；\n（四）劳动者同时与其他用人单位建立劳动关系，对完成本单位的工作任务造成严重影响，或者经用人单位提出，拒不改正的；\n（五）因本法",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "https://www.pkulaw.com/chl/7ab5e7d605f859e6bdfb.html?way=mcp#tiao_39.0",
+          "content_preview": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\n  \\\"Message\\\": \\\"成功\\\",\\n  \\\"Data\\\": {\\n    \\\"Title\\\": \\\"中华人民共和国劳动合同法(2012修正)\\\",\\n   "
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "中华人民共和国劳动合同法",
+      "article": 87,
+      "category": "consistent",
+      "expected": "违法解除 2N",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "用人单位违反本法规定解除或者终止劳动合同的，应当依照本法",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "https://www.pkulaw.com/chl/7ab5e7d605f859e6bdfb.html?way=mcp#tiao_87.0",
+          "content_preview": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\n  \\\"Message\\\": \\\"成功\\\",\\n  \\\"Data\\\": {\\n    \\\"Title\\\": \\\"中华人民共和国劳动合同法(2012修正)\\\",\\n   "
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "中华人民共和国公司法",
+      "article": 16,
+      "category": "consistent",
+      "expected": "出资义务",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "公司向其他企业投资或者为他人提供担保，依照公司章程的规定，由董事会或者股东会、股东大会决议；公司章程对投资或者担保的总额及单项投资或者担保的数额有限额规定的，不得超过规定的限额。\n公司为公司股东或者实际控制人提供担保的，必须经股东会或者股东大会决议。\n前款规定的股东或者受前款规定的实际控制人支配的股东，不得参加前款规定事项的表决。该项表决由出席会议的其他股东所持表决权的过半数通过。",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "https://www.pkulaw.com/chl/8ba805acd08846d7bdfb.html?way=mcp#tiao_16.0",
+          "content_preview": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\n  \\\"Message\\\": \\\"成功\\\",\\n  \\\"Data\\\": {\\n    \\\"Title\\\": \\\"中华人民共和国公司法(2023修订)\\\",\\n    \\"
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "中华人民共和国消费者权益保护法",
+      "article": 55,
+      "category": "consistent",
+      "expected": "欺诈三倍",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "经营者提供商品或者服务有欺诈行为的，应当按照消费者的要求增加赔偿其受到的损失，增加赔偿的金额为消费者购买商品的价款或者接受服务的费用的三倍；增加赔偿的金额不足五百元的，为五百元。法律另有规定的，依照其规定。\n经营者明知商品或者服务存在缺陷，仍然向消费者提供，造成消费者或者其他受害人死亡或者健康严重损害的，受害人有权要求经营者依照本法",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "https://www.pkulaw.com/chl/a347c82e6a7d13aabdfb.html?way=mcp#tiao_55.0",
+          "content_preview": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\n  \\\"Message\\\": \\\"成功\\\",\\n  \\\"Data\\\": {\\n    \\\"Title\\\": \\\"中华人民共和国消费者权益保护法(2013修正)\\\",\\n"
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "中华人民共和国劳动争议调解仲裁法",
+      "article": 27,
+      "category": "consistent",
+      "expected": "仲裁时效 1 年",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "劳动争议申请仲裁的时效期间为一年。仲裁时效期间从当事人知道或者应当知道其权利被侵害之日起计算。\n前款规定的仲裁时效，因当事人一方向对方当事人主张权利，或者向有关部门请求权利救济，或者对方当事人同意履行义务而中断。从中断时起，仲裁时效期间重新计算。\n因不可抗力或者有其他正当理由，当事人不能在本条第一款规定的仲裁时效期间申请仲裁的，仲裁时效中止。从中止时效的原因消除之日起，仲裁时效期间继续计算。\n劳动",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "https://www.pkulaw.com/chl/d257b3027949da71bdfb.html?way=mcp#tiao_27.0",
+          "content_preview": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\n  \\\"Message\\\": \\\"成功\\\",\\n  \\\"Data\\\": {\\n    \\\"Title\\\": \\\"中华人民共和国劳动争议调解仲裁法\\\",\\n    \\\"U"
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "中华人民共和国数据安全法",
+      "article": 21,
+      "category": "consistent",
+      "expected": "数据分类分级",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "国家建立数据分类分级保护制度，根据数据在经济社会发展中的重要程度，以及一旦遭到篡改、破坏、泄露或者非法获取、非法利用，对国家安全、公共利益或者个人、组织合法权益造成的危害程度，对数据实行分类分级保护。国家数据安全工作协调机制统筹协调有关部门制定重要数据目录，加强对重要数据的保护。\n关系国家安全、国民经济命脉、重要民生、重大公共利益等数据属于国家核心数据，实行更加严格的管理制度。\n各地区、各部门应当",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "https://www.pkulaw.com/chl/1dd3a2fb498ecb3ebdfb.html?way=mcp#tiao_21.0",
+          "content_preview": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\n  \\\"Message\\\": \\\"成功\\\",\\n  \\\"Data\\\": {\\n    \\\"Title\\\": \\\"中华人民共和国数据安全法\\\",\\n    \\\"Url\\\""
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "中华人民共和国数据安全法",
+      "article": 32,
+      "category": "consistent",
+      "expected": "数据出境",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "任何组织、个人收集数据，应当采取合法、正当的方式，不得窃取或者以其他非法方式获取数据。\n法律、行政法规对收集、使用数据的目的、范围有规定的，应当在法律、行政法规规定的目的和范围内收集、使用数据。",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "https://www.pkulaw.com/chl/1dd3a2fb498ecb3ebdfb.html?way=mcp#tiao_32.0",
+          "content_preview": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\n  \\\"Message\\\": \\\"成功\\\",\\n  \\\"Data\\\": {\\n    \\\"Title\\\": \\\"中华人民共和国数据安全法\\\",\\n    \\\"Url\\\""
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "中华人民共和国个人信息保护法",
+      "article": 13,
+      "category": "consistent",
+      "expected": "个人信息定义",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "符合下列情形之一的，个人信息处理者方可处理个人信息：\n（一）取得个人的同意；\n（二）为订立、履行个人作为一方当事人的合同所必需，或者按照依法制定的劳动规章制度和依法签订的集体合同实施人力资源管理所必需；\n（三）为履行法定职责或者法定义务所必需；\n（四）为应对突发公共卫生事件，或者紧急情况下为保护自然人的生命健康和财产安全所必需；\n（五）为公共利益实施新闻报道、舆论监督等行为，在合理的范围内处理个人",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "https://www.pkulaw.com/chl/d653ed619d0961c0bdfb.html?way=mcp#tiao_13.0",
+          "content_preview": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\n  \\\"Message\\\": \\\"成功\\\",\\n  \\\"Data\\\": {\\n    \\\"Title\\\": \\\"中华人民共和国个人信息保护法\\\",\\n    \\\"Url"
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "中华人民共和国个人信息保护法",
+      "article": 38,
+      "category": "consistent",
+      "expected": "跨境传输条件",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "个人信息处理者因业务等需要，确需向中华人民共和国境外提供个人信息的，应当具备下列条件之一：\n（一）依照本法",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "https://www.pkulaw.com/chl/d653ed619d0961c0bdfb.html?way=mcp#tiao_38.0",
+          "content_preview": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\n  \\\"Message\\\": \\\"成功\\\",\\n  \\\"Data\\\": {\\n    \\\"Title\\\": \\\"中华人民共和国个人信息保护法\\\",\\n    \\\"Url"
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "中华人民共和国个人信息保护法",
+      "article": 66,
+      "category": "consistent",
+      "expected": "罚款上限",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "违反本法规定处理个人信息，或者处理个人信息未履行本法规定的个人信息保护义务的，由履行个人信息保护职责的部门责令改正，给予警告，没收违法所得，对违法处理个人信息的应用程序，责令暂停或者终止提供服务；拒不改正的，并处一百万元以下罚款；对直接负责的主管人员和其他直接责任人员处一万元以上十万元以下罚款。\n有前款规定的违法行为，情节严重的，由省级以上履行个人信息保护职责的部门责令改正，没收违法所得，并处五千",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "https://www.pkulaw.com/chl/d653ed619d0961c0bdfb.html?way=mcp#tiao_66.0",
+          "content_preview": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\n  \\\"Message\\\": \\\"成功\\\",\\n  \\\"Data\\\": {\\n    \\\"Title\\\": \\\"中华人民共和国个人信息保护法\\\",\\n    \\\"Url"
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "中华人民共和国网络安全法",
+      "article": 37,
+      "category": "consistent",
+      "expected": "关键信息基础设施",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "规定，在境外存储网络数据，或者向境外提供网络数据的，由有关主管部门责令改正，给予警告，没收违法所得，处五万元以上五十万元以下罚款，并可以责令暂停相关业务、停业整顿、关闭网站、吊销相关业务许可证或者吊销营业执照；对直接负责的主管人员和其他直接责任人员处一万元以上十万元以下罚款。",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "https://www.pkulaw.com/chl/fe9682732480b562bdfb.html?way=mcp#tiao_37.0",
+          "content_preview": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\n  \\\"Message\\\": \\\"成功\\\",\\n  \\\"Data\\\": {\\n    \\\"Title\\\": \\\"中华人民共和国网络安全法(2025修正)\\\",\\n   "
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "中华人民共和国网络安全法",
+      "article": 41,
+      "category": "consistent",
+      "expected": "个人信息保护",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "网络运营者收集、使用个人信息，应当遵循合法、正当、必要的原则，公开收集、使用规则，明示收集、使用信息的目的、方式和范围，并经被收集者同意。\n网络运营者不得收集与其提供的服务无关的个人信息，不得违反法律、行政法规的规定和双方的约定收集、使用个人信息，并应当依照法律、行政法规的规定和与用户的约定，处理其保存的个人信息。",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "",
+          "content_preview": "{\n  \"error\": \"HTTP 401: Authorization Required\",\n  \"body\": \"{\\\"code\\\":\\\"90001\\\",\\\"message\\\":\\\"Unclassified Authentication Failure\\\",\\\"description\\\":\\\"Error while checking remaining points for user: 67"
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "关键信息基础设施安全保护条例",
+      "article": 8,
+      "category": "consistent",
+      "expected": "运营者义务",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "第八条　关键信息基础设施运营者（以下简称运营者）应当依照有关法律、法规和本条例的规定以及有关标准的要求，保障关键信息基础设施安全稳定运行。",
+          "source_detail": "pkulaw"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "",
+          "content_preview": "{\n  \"error\": \"HTTP 401: Authorization Required\",\n  \"body\": \"{\\\"code\\\":\\\"90001\\\",\\\"message\\\":\\\"Unclassified Authentication Failure\\\",\\\"description\\\":\\\"Error while checking remaining points for user: 67"
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "个人信息出境标准合同办法",
+      "article": 3,
+      "category": "consistent",
+      "expected": "标准合同适用",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "第三条　通过订立标准合同的方式开展个人信息出境活动，应当坚持自主缔约与备案管理相结合、保护权益与防范风险相结合，保障个人信息跨境安全、自由流动。",
+          "source_detail": "pkulaw"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "",
+          "content_preview": "{\n  \"error\": \"HTTP 401: Authorization Required\",\n  \"body\": \"{\\\"code\\\":\\\"90001\\\",\\\"message\\\":\\\"Unclassified Authentication Failure\\\",\\\"description\\\":\\\"Error while checking remaining points for user: 67"
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "数据出境安全评估办法",
+      "article": 7,
+      "category": "consistent",
+      "expected": "评估触发条件",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "第七条　省级网信部门应当自收到申报材料之日起5个工作日内完成完备性查验。申报材料齐全的，将申报材料报送国家网信部门；申报材料不齐全的，应当退回数据处理者并一次性告知需要补充的材料。\r\n\r\n　　国家网信部门应当自收到申报材料之日起7个工作日内，确定是否受理并书面通知数据处理者。",
+          "source_detail": "pkulaw"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "",
+          "content_preview": "{\n  \"error\": \"HTTP 401: Authorization Required\",\n  \"body\": \"{\\\"code\\\":\\\"90001\\\",\\\"message\\\":\\\"Unclassified Authentication Failure\\\",\\\"description\\\":\\\"Error while checking remaining points for user: 67"
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "最高人民法院关于审理民间借贷案件适用法律若干问题的规定",
+      "article": 25,
+      "category": "consistent",
+      "expected": "民间借贷利率",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "借贷双方没有约定利息，出借人主张支付利息的，人民法院不予支持。\n自然人之间借贷对利息约定不明，出借人主张支付利息的，人民法院不予支持。除自然人之间借贷的外，借贷双方对借贷利息约定不明，出借人主张利息的，人民法院应当结合民间借贷合同的内容，并根据当地或者当事人的交易方式、交易习惯、市场报价利率等因素确定利息。",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "",
+          "content_preview": "{\n  \"error\": \"HTTP 401: Authorization Required\",\n  \"body\": \"{\\\"code\\\":\\\"90001\\\",\\\"message\\\":\\\"Unclassified Authentication Failure\\\",\\\"description\\\":\\\"Error while checking remaining points for user: 67"
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "最高人民法院关于审理人身损害赔偿案件适用法律若干问题的解释",
+      "article": 17,
+      "category": "consistent",
+      "expected": "误工费",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "受害人遭受人身损害，因就医治疗支出的各项费用以及因误工减少的收入，包括医疗费、误工费、护理费、交通费、住宿费、住院伙食补助费、必要的营养费，赔偿义务人应当予以赔偿。\n受害人因伤致残的，其因增加生活上需要所支出的必要费用以及因丧失劳动能力导致的收入损失，包括残疾赔偿金、残疾辅助器具费、被扶养人生活费，以及因康复护理、继续治疗实际发生的必要的康复费、护理费、后续治疗费，赔偿义务人也应当予以赔偿。\n受害",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "",
+          "content_preview": "{\n  \"error\": \"HTTP 401: Authorization Required\",\n  \"body\": \"{\\\"code\\\":\\\"90001\\\",\\\"message\\\":\\\"Unclassified Authentication Failure\\\",\\\"description\\\":\\\"Error while checking remaining points for user: 67"
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "最高人民法院关于适用《中华人民共和国合同法》若干问题的解释(二)",
+      "article": 26,
+      "category": "consistent",
+      "expected": "违约金调整",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "第二十六条　合同成立以后客观情况发生了当事人在订立合同时无法预见的、非不可抗力造成的不属于商业风险的重大变化，继续履行合同对于一方当事人明显不公平或者不能实现合同目的，当事人请求人民法院变更或者解除合同的，人民法院应当根据公平原则，并结合案件的实际情况确定是否变更或者解除。",
+          "source_detail": "pkulaw"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "",
+          "content_preview": "{\n  \"error\": \"HTTP 401: Authorization Required\",\n  \"body\": \"{\\\"code\\\":\\\"90001\\\",\\\"message\\\":\\\"Unclassified Authentication Failure\\\",\\\"description\\\":\\\"Error while checking remaining points for user: 67"
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "最高人民法院关于审理建设工程施工合同纠纷案件适用法律问题的解释(一)",
+      "article": 25,
+      "category": "consistent",
+      "expected": "工程款利息",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "第二十五条 当事人对垫资和垫资利息有约定，承包人请求按照约定返还垫资及其利息的，人民法院应予支持，但是约定的利息计算标准高于垫资时的同类贷款利率或者同期贷款市场报价利率的部分除外。\r\n\r\n　　当事人对垫资没有约定的，按照工程欠款处理。\r\n\r\n　　当事人对垫资利息没有约定，承包人请求支付利息的，人民法院不予支持。",
+          "source_detail": "pkulaw"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "",
+          "content_preview": "{\n  \"error\": \"HTTP 401: Authorization Required\",\n  \"body\": \"{\\\"code\\\":\\\"90001\\\",\\\"message\\\":\\\"Unclassified Authentication Failure\\\",\\\"description\\\":\\\"Error while checking remaining points for user: 67"
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "最高人民法院关于审理劳动争议案件适用法律问题的解释(一)",
+      "article": 44,
+      "category": "consistent",
+      "expected": "劳动关系确认",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "第四十四条 因用人单位作出的开除、除名、辞退、解除劳动合同、减少劳动报酬、计算劳动者工作年限等决定而发生的劳动争议，用人单位负举证责任。",
+          "source_detail": "pkulaw"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "",
+          "content_preview": "{\n  \"error\": \"HTTP 401: Authorization Required\",\n  \"body\": \"{\\\"code\\\":\\\"90001\\\",\\\"message\\\":\\\"Unclassified Authentication Failure\\\",\\\"description\\\":\\\"Error while checking remaining points for user: 67"
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "最高人民法院关于适用《中华人民共和国公司法》若干问题的规定(三)",
+      "article": 17,
+      "category": "consistent",
+      "expected": "股东出资",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "第十七条　有限责任公司的股东未履行出资义务或者抽逃全部出资，经公司催告缴纳或者返还，其在合理期间内仍未缴纳或者返还出资，公司以股东会决议解除该股东的股东资格，该股东请求确认该解除行为无效的，人民法院不予支持。\r\n　　在前款规定的情形下，人民法院在判决时应当释明，公司应当及时办理法定减资程序或者由其他股东或者第三人缴纳相应的出资。在办理法定减资程序或者其他股东或者第三人缴纳相应的出资之前，公司债权人",
+          "source_detail": "pkulaw"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "",
+          "content_preview": "{\n  \"error\": \"HTTP 401: Authorization Required\",\n  \"body\": \"{\\\"code\\\":\\\"90001\\\",\\\"message\\\":\\\"Unclassified Authentication Failure\\\",\\\"description\\\":\\\"Error while checking remaining points for user: 67"
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "最高人民法院关于适用《中华人民共和国民法典》婚姻家庭编的解释(一)",
+      "article": 78,
+      "category": "consistent",
+      "expected": "彩礼返还",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "第七十八条　夫妻一方婚前签订不动产买卖合同，以个人财产支付首付款并在银行贷款，婚后用夫妻共同财产还贷，不动产登记于首付款支付方名下的，离婚时该不动产由双方协议处理。\r\n\r\n　　依前款规定不能达成协议的，人民法院可以判决该不动产归登记一方，尚未归还的贷款为不动产登记一方的个人债务。双方婚后共同还贷支付的款项及其相对应财产增值部分，离婚时应根据民法典第一千零八十七条第一款规定的原则，由不动产登记一方对",
+          "source_detail": "pkulaw"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "",
+          "content_preview": "{\n  \"error\": \"HTTP 401: Authorization Required\",\n  \"body\": \"{\\\"code\\\":\\\"90001\\\",\\\"message\\\":\\\"Unclassified Authentication Failure\\\",\\\"description\\\":\\\"Error while checking remaining points for user: 67"
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "最高人民法院关于审理食品安全民事纠纷案件适用法律若干问题的解释(一)",
+      "article": 14,
+      "category": "consistent",
+      "expected": "十倍赔偿",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "第十四条　本解释自2021年1月1日起施行。\r\n　　本解释施行后人民法院正在审理的一审、二审案件适用本解释。\r\n　　本解释施行前已经终审，本解释施行后当事人申请再审或者按照审判监督程序决定再审的案件，不适用本解释。\r\n　　最高人民法院以前发布的司法解释与本解释不一致的，以本解释为准。",
+          "source_detail": "pkulaw"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "",
+          "content_preview": "{\n  \"error\": \"HTTP 401: Authorization Required\",\n  \"body\": \"{\\\"code\\\":\\\"90001\\\",\\\"message\\\":\\\"Unclassified Authentication Failure\\\",\\\"description\\\":\\\"Error while checking remaining points for user: 67"
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "最高人民法院关于审理侵犯商业秘密民事案件适用法律若干问题的解释",
+      "article": 14,
+      "category": "consistent",
+      "expected": "商业秘密认定",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "第十四条　拟新增耕地应当按照相关技术规范要求开展土壤污染状况调查，农业农村主管部门按照土壤污染风险管控标准依法实施分类管理。未开展土壤污染状况调查的，不得开垦为耕地。",
+          "source_detail": "pkulaw"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "",
+          "content_preview": "{\n  \"error\": \"HTTP 401: Authorization Required\",\n  \"body\": \"{\\\"code\\\":\\\"90001\\\",\\\"message\\\":\\\"Unclassified Authentication Failure\\\",\\\"description\\\":\\\"Error while checking remaining points for user: 67"
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    },
+    {
+      "law": "最高人民法院关于审理证券市场虚假陈述侵权民事赔偿案件的若干规定",
+      "article": 6,
+      "category": "consistent",
+      "expected": "揭露日",
+      "sources": {
+        "prc_law_data": {
+          "content_preview": "原告以信息披露文件中的盈利预测、发展规划等预测性信息与实际经营情况存在重大差异为由主张发行人实施虚假陈述的，人民法院不予支持，但有下列情形之一的除外：\n\n（一）信息披露文件未对影响该预测实现的重要因素进行充分风险提示的；\n\n（二）预测性信息所依据的基本假设、选用的会计政策等编制基础明显不合理的；\n\n（三）预测性信息所依据的前提发生重大变化时，未及时履行更正义务的。\n\n前款所称的重大差异，可以参照监",
+          "source_detail": "laws-data"
+        },
+        "pkulaw": {
+          "label": "[单源—需复核: 北大法宝 2026-09-02]",
+          "url": "",
+          "content_preview": "{\n  \"error\": \"HTTP 401: Authorization Required\",\n  \"body\": \"{\\\"code\\\":\\\"90001\\\",\\\"message\\\":\\\"Unclassified Authentication Failure\\\",\\\"description\\\":\\\"Error while checking remaining points for user: 67"
+        }
+      },
+      "sources_hit": [
+        "pkulaw",
+        "prc_law_data"
+      ]
+    }
+  ],
+  "summary": {
+    "consistent": 48,
+    "pkulaw_only": 0,
+    "prc_law_data_only": 0,
+    "all_miss": 0
+  }
+}

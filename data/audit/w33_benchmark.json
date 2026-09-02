@@ -1,0 +1,124 @@
+{
+  "meta": {
+    "cases": 7,
+    "articles": 12
+  },
+  "summary": {
+    "cases_total": 7,
+    "articles_total": 12,
+    "consistent_count": 0,
+    "pkulaw_only_count": 0,
+    "prc_law_data_only_count": 11,
+    "all_miss_count": 1
+  },
+  "results": [
+    {
+      "case": "（2008）二中民终字第00453号.json",
+      "law": "中华人民共和国消费者权益保护法",
+      "article": 2,
+      "pkulaw_hit": false,
+      "pkulaw_status": "credit_exhausted",
+      "prc_law_data_hit": true,
+      "consistent": false
+    },
+    {
+      "case": "（2011）杭滨民初字第885号.json",
+      "law": "中华人民共和国劳动合同法",
+      "article": 39,
+      "pkulaw_hit": false,
+      "pkulaw_status": "credit_exhausted",
+      "prc_law_data_hit": true,
+      "consistent": false
+    },
+    {
+      "case": "（2011）泉商初字第240号.json",
+      "law": "中华人民共和国合同法",
+      "article": 39,
+      "pkulaw_hit": false,
+      "pkulaw_status": "credit_exhausted",
+      "prc_law_data_hit": true,
+      "consistent": false
+    },
+    {
+      "case": "（2019）最高法民再155号.json",
+      "law": "中华人民共和国物权法",
+      "article": 15,
+      "pkulaw_hit": false,
+      "pkulaw_status": "credit_exhausted",
+      "prc_law_data_hit": true,
+      "consistent": false
+    },
+    {
+      "case": "（2019）最高法民再155号.json",
+      "law": "中华人民共和国民法典",
+      "article": 215,
+      "pkulaw_hit": false,
+      "pkulaw_status": "credit_exhausted",
+      "prc_law_data_hit": true,
+      "consistent": false
+    },
+    {
+      "case": "（2019）最高法民再155号.json",
+      "law": "中华人民共和国合同法",
+      "article": 107,
+      "pkulaw_hit": false,
+      "pkulaw_status": "credit_exhausted",
+      "prc_law_data_hit": true,
+      "consistent": false
+    },
+    {
+      "case": "（2019）最高法民再155号.json",
+      "law": "中华人民共和国民法典",
+      "article": 577,
+      "pkulaw_hit": false,
+      "pkulaw_status": "credit_exhausted",
+      "prc_law_data_hit": true,
+      "consistent": false
+    },
+    {
+      "case": "（2019）最高法民终6号.json",
+      "law": "最高人民法院关于适用〈中华人民共和国合同法〉若干问题的解释（一）",
+      "article": 20,
+      "pkulaw_hit": false,
+      "pkulaw_status": "credit_exhausted",
+      "prc_law_data_hit": false,
+      "consistent": false
+    },
+    {
+      "case": "（2019）最高法民终6号.json",
+      "law": "中华人民共和国民法典",
+      "article": 537,
+      "pkulaw_hit": false,
+      "pkulaw_status": "credit_exhausted",
+      "prc_law_data_hit": true,
+      "consistent": false
+    },
+    {
+      "case": "（2019）苏07民终658号.json",
+      "law": "中华人民共和国劳动合同法",
+      "article": 39,
+      "pkulaw_hit": false,
+      "pkulaw_status": "credit_exhausted",
+      "prc_law_data_hit": true,
+      "consistent": false
+    },
+    {
+      "case": "（2023）最高法民再262号.json",
+      "law": "中华人民共和国民法典",
+      "article": 188,
+      "pkulaw_hit": false,
+      "pkulaw_status": "credit_exhausted",
+      "prc_law_data_hit": true,
+      "consistent": false
+    },
+    {
+      "case": "（2023）最高法民再262号.json",
+      "law": "中华人民共和国民法典",
+      "article": 188,
+      "pkulaw_hit": false,
+      "pkulaw_status": "credit_exhausted",
+      "prc_law_data_hit": true,
+      "consistent": false
+    }
+  ]
+}
