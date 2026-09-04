@@ -5,6 +5,24 @@
 
 ## [未发布]
 
+### 新增 · 个人品牌:公众号/微信/打赏入口 (W39)
+
+**`docs/assets/qrcode-mp.jpg` + `qrcode-wechat.jpg`** (新) — 标准化路径存放公众号与个人微信二维码。
+
+**作者信息展示**:
+- **README.md** — 顶部 `## 👤 关于作者` 段(横排二码 + 个人简介 + 打赏引导)
+- **CLAUDE.md** — 顶部 `## 👤 关于作者` 段(开发视角同样版式)
+- **docs/lawyer-guide.md** — 律师路径可见
+- **docs/workbuddy-integration.md** — WorkBuddy 集成指南可见
+
+**文案要点**:
+- 作者:「搞 AI 的陈老师」独立开发者,资深 AI 从业者,深耕法律科技与 AI Agent 工程
+- 公众号价值:「第一手更新 · AI + 法律实战」
+- 微信价值:「读者群 · 技术交流 · 项目咨询」
+- 打赏激励:「赞赏备注『PRC-Law』可加入优先反馈名单,新功能/法律数据需求优先响应」
+
+**清理**: 仓库根目录的原图副本已删除(避免和 `assets/` 重复,缩小 repo 体积)。
+
 ### 新增 · 双源数据审计 GitHub Actions cron (W35)
 
 **`.github/workflows/dual-source-audit.yml`** (新) — 周级自动跑 `data_audit.py` + `w33_benchmark.py` + `w32_fill_gaps.py --dry-run`:

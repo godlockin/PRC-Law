@@ -3,6 +3,21 @@
 > 律师通过 WorkBuddy (腾讯工作台) 或类似 online/offline 工具加载 PRC-Law skills,
 > 不需要 CLI / 不需要 VSCode。
 
+---
+
+## 👤 关于作者
+
+**搞 AI 的陈老师** — 独立开发者,资深 AI 从业者,深耕法律科技与 AI Agent 工程。
+
+| 公众号「搞 AI 的陈老师」 | 个人微信 |
+|:---:|:---:|
+| ![公众号](assets/qrcode-mp.jpg) | ![个人微信](assets/qrcode-wechat.jpg) |
+| 第一手更新 · AI + 法律实战 | 读者群 · 技术交流 · 项目咨询 |
+
+🙏 **如果律鉴对你的工作有帮助,欢迎赞赏支持持续维护** (赞赏备注「PRC-Law」可加入优先反馈名单)。
+
+---
+
 ## 什么是 WorkBuddy
 
 - **类型**: 在线/离线 AI 工作台 (腾讯出品)
