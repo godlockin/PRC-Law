@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 律鉴终端 demo 截图 · ND5 内部调查 · 静态 SVG -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" font-family="Menlo, Monaco, Consolas, monospace">
+  <defs>
+    <linearGradient id="term-bg" x1="0" y1="0" x2="0" y2="500">
+      <stop offset="0%" stop-color="#1a1a2e"/>
+      <stop offset="100%" stop-color="#0a0a1a"/>
+    </linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.4"/></filter>
+  </defs>
+
+  <rect x="0" y="0" width="800" height="500" rx="10" fill="url(#term-bg)" filter="url(#shadow)"/>
+  <rect x="0" y="0" width="800" height="36" rx="10" fill="#2a2a3e"/>
+  <rect x="0" y="30" width="800" height="6" fill="#2a2a3e"/>
+  <circle cx="20" cy="18" r="6" fill="#ff5f56"/>
+  <circle cx="40" cy="18" r="6" fill="#ffbd2e"/>
+  <circle cx="60" cy="18" r="6" fill="#27c93f"/>
+  <text x="400" y="22" text-anchor="middle" font-size="11" fill="#909090">律鉴 (PRC-Law) — ND5: cn-internal-investigation · 24h 响应</text>
+
+  <text x="20" y="80" font-size="13" fill="#27c93f">❯</text>
+  <text x="40" y="80" font-size="13" fill="#ffffff">员工被举报收受回扣,启动内部调查</text>
+
+  <text x="20" y="115" font-size="13" fill="#c9a961">⚖️ 启动 cn-internal-investigation 全链路:</text>
+
+  <g font-size="12">
+    <text x="40" y="145" fill="#27c93f">✓</text><text x="60" y="145" fill="#ffffff">Step 1 · 证据评估      ······ 3 项证据 · 真实/合法/关联 ✓</text>
+    <text x="40" y="165" fill="#27c93f">✓</text><text x="60" y="165" fill="#ffffff">Step 2 · 法律检索      ······ 监察法 + 公司法 + 劳动合同法</text>
+    <text x="40" y="185" fill="#27c93f">✓</text><text x="60" y="185" fill="#ffffff">Step 3 · 风险矩阵      ······ 5 维度评估 (合规/解除/赔偿/声誉/连带)</text>
+    <text x="40" y="205" fill="#27c93f">✓</text><text x="60" y="205" fill="#ffffff">Step 4 · 处置建议      ······ 3 套方案 (和解/调岗/解除)</text>
+    <text x="40" y="225" fill="#27c93f">✓</text><text x="60" y="225" fill="#ffffff">Step 5 · 文书生成      ······ 调查报告 + 谈话记录 + 解除通知</text>
+  </g>
+
+  <!-- 风险矩阵 -->
+  <text x="20" y="265" font-size="13" fill="#c9a961">📊 风险矩阵:</text>
+
+  <g font-size="11">
+    <text x="40" y="290" fill="#ff6b6b">  合规风险 ········</text>
+    <rect x="180" y="280" width="500" height="14" fill="#2a2a3e" rx="2"/>
+    <rect x="180" y="280" width="450" height="14" fill="#ff6b6b" opacity="0.8" rx="2"/>
+    <text x="690" y="290" fill="#ffffff">高 (9/10)</text>
+
+    <text x="40" y="310" fill="#ffbd2e">  解除合法性 ······</text>
+    <rect x="180" y="300" width="500" height="14" fill="#2a2a3e" rx="2"/>
+    <rect x="180" y="300" width="320" height="14" fill="#ffbd2e" opacity="0.8" rx="2"/>
+    <text x="690" y="310" fill="#ffffff">中 (6/10)</text>
+
+    <text x="40" y="330" fill="#ffbd2e">  赔偿风险 ········</text>
+    <rect x="180" y="320" width="500" height="14" fill="#2a2a3e" rx="2"/>
+    <rect x="180" y="320" width="280" height="14" fill="#ffbd2e" opacity="0.8" rx="2"/>
+    <text x="690" y="330" fill="#ffffff">中 (5/10)</text>
+
+    <text x="40" y="350" fill="#27c93f">  声誉风险 ········</text>
+    <rect x="180" y="340" width="500" height="14" fill="#2a2a3e" rx="2"/>
+    <rect x="180" y="340" width="180" height="14" fill="#27c93f" opacity="0.8" rx="2"/>
+    <text x="690" y="350" fill="#ffffff">低 (3/10)</text>
+  </g>
+
+  <!-- 处置建议 -->
+  <rect x="20" y="370" width="760" height="60" fill="#c9a961" opacity="0.12" rx="4"/>
+  <text x="40" y="392" font-size="13" fill="#c9a961">  推荐方案: 「谈话 + 调岗 + 退回违法所得」</text>
+  <text x="40" y="412" font-size="11" fill="#909090">     避免直接解除的法律风险 + 控制赔偿敞口</text>
+
+  <text x="20" y="455" font-size="13" fill="#27c93f">❯</text>
+  <rect x="35" y="444" width="8" height="14" fill="#27c93f">
+    <animate attributeName="opacity" values="1;0;1" dur="1s" repeatCount="indefinite"/>
+  </rect>
+  <text x="50" y="455" font-size="11" fill="#5a5a5a">▌ 2 分 45 秒 · 7 API 调用 · ¥0.08 · 报告路径已生成</text>
+</svg>

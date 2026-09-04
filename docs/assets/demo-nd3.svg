@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 律鉴终端 demo 截图 · ND3 合同审查 · 6 Agent 并行 · 静态 SVG -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" font-family="Menlo, Monaco, Consolas, monospace">
+  <defs>
+    <linearGradient id="term-bg" x1="0" y1="0" x2="0" y2="500">
+      <stop offset="0%" stop-color="#1a1a2e"/>
+      <stop offset="100%" stop-color="#0a0a1a"/>
+    </linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.4"/></filter>
+  </defs>
+
+  <rect x="0" y="0" width="800" height="500" rx="10" fill="url(#term-bg)" filter="url(#shadow)"/>
+  <rect x="0" y="0" width="800" height="36" rx="10" fill="#2a2a3e"/>
+  <rect x="0" y="30" width="800" height="6" fill="#2a2a3e"/>
+  <circle cx="20" cy="18" r="6" fill="#ff5f56"/>
+  <circle cx="40" cy="18" r="6" fill="#ffbd2e"/>
+  <circle cx="60" cy="18" r="6" fill="#27c93f"/>
+  <text x="400" y="22" text-anchor="middle" font-size="11" fill="#909090">律鉴 (PRC-Law) — ND3: SaaS 合同审查 · 6 Agent 并行</text>
+
+  <!-- 输入 -->
+  <text x="20" y="80" font-size="13" fill="#27c93f">❯</text>
+  <text x="40" y="80" font-size="13" fill="#ffffff">审查这份 SaaS MSA 合同</text>
+
+  <text x="20" y="105" font-size="11" fill="#888888">  [文档: ~/Downloads/acme-msa.pdf · 23 页]</text>
+
+  <!-- 6 Agent 并行 -->
+  <text x="20" y="140" font-size="13" fill="#c9a961">⚖️ 启动 6 Agent 并行审查:</text>
+
+  <g font-size="12">
+    <text x="40" y="168" fill="#27c93f">✓</text><text x="60" y="168" fill="#ffffff">合规 Agent    ······ 5 条款 · 1 风险</text>
+    <text x="40" y="188" fill="#27c93f">✓</text><text x="60" y="188" fill="#ffffff">财务 Agent    ······ 3 条款 · 2 风险</text>
+    <text x="40" y="208" fill="#27c93f">✓</text><text x="60" y="208" fill="#ffffff">防御 Agent    ······ 4 条款 · 1 风险</text>
+    <text x="40" y="228" fill="#27c93f">✓</text><text x="60" y="228" fill="#ffffff">履行 Agent    ······ 2 条款 · 0 风险</text>
+    <text x="40" y="248" fill="#c9a961">⏳</text><text x="60" y="248" fill="#ffffff">商业 Agent    ······ 扫描中...</text>
+    <text x="40" y="268" fill="#c9a961">⏳</text><text x="60" y="268" fill="#ffffff">跨境 Agent    ······ 扫描中...</text>
+  </g>
+
+  <!-- 评分 -->
+  <text x="20" y="305" font-size="13" fill="#c9a961">📊 综合评分 (5 维):</text>
+
+  <g font-size="12">
+    <text x="40" y="328" fill="#ffffff">合规 8/10  ·</text>
+    <text x="160" y="328" fill="#ff6b6b">财务 4/10 ⚠️</text>
+    <text x="280" y="328" fill="#ffffff">防御 7/10  ·</text>
+    <text x="400" y="328" fill="#ffffff">履行 9/10  ·</text>
+    <text x="520" y="328" fill="#ffffff">商业 6/10</text>
+  </g>
+
+  <!-- 关键风险 -->
+  <rect x="20" y="345" width="760" height="40" fill="#ff6b6b" opacity="0.15" rx="4"/>
+  <text x="40" y="365" font-size="13" fill="#ff6b6b">  ⚠️ 高风险: 违约金上限仅 12 个月费用 (行业惯例 24 个月)</text>
+  <text x="40" y="378" font-size="11" fill="#909090">     [单源: 元典 · 需北大法宝复核]</text>
+
+  <text x="20" y="425" font-size="13" fill="#27c93f">✓</text>
+  <text x="40" y="425" font-size="13" fill="#ffffff">7 章结构化报告已生成: ~/lawyer-work/matters/M-2026-001/review.md</text>
+
+  <text x="20" y="465" font-size="13" fill="#27c93f">❯</text>
+  <rect x="35" y="454" width="8" height="14" fill="#27c93f">
+    <animate attributeName="opacity" values="1;0;1" dur="1s" repeatCount="indefinite"/>
+  </rect>
+  <text x="50" y="465" font-size="11" fill="#5a5a5a">▌ 3 分 12 秒 · 4 API 调用 · ¥0.05 (元典)</text>
+</svg>

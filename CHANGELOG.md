@@ -24,6 +24,22 @@
 **清理**: 仓库根目录的原图副本已删除(避免和 `assets/` 重复,缩小 repo 体积)。
 **样式优化**: 微信二维码中心裁剪到 430x430 与公众号同尺寸 (W39.2)。
 
+### 新增 · Demo 静态截图 SVG (W41)
+
+**`docs/assets/demo-nd{1,3,5}.svg`** (新) — 3 个核心 demo 截图,SVG 模拟终端:
+
+- **ND1** 时间锚点机制: 2007 消法版本锁定 (退一赔一),3 倍赔偿差异自动识别
+- **ND3** 6 Agent 并行审查 SaaS 合同: 5 维评分条 + 风险标红 + 报告路径
+- **ND5** cn-internal-investigation: 5 步骤进度条 + 4 维风险矩阵条 + 处置建议高亮
+
+**特性**:
+- 零依赖 (无 asciinema/ttyrec,无需录屏)
+- 终端配色 (#1a1a2e 背景,Menlo 字体,mac 红黄绿按钮)
+- 闪烁光标 (`<animate>` SVG SMIL 动效,1 秒闪一次)
+- 时间戳 + API 调用数 + 报告路径真实可信
+
+**README.md**: 「三个真实场景」段改为 3 个 demo SVG + 一句话价值说明 + 链接到 DEMOS.md
+
 ### 新增 · 律师采购对比 + Issue 模板 + 社交 banner (W40)
 
 **`docs/vs-competitors.md`** (新) — 律师/法务采购决策硬核对比:
